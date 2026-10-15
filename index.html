@@ -1,0 +1,4399 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>华韵数智 · 中华文化AIGC智能体</title>
+    <meta
+      name="description"
+      content="面向非物质文化遗产与中华老字号品牌宣传推广的校园文化AIGC智能体，提供文化知识问答、非遗文案生成、品牌故事编撰、宣传海报文案与内容合规审核。"
+    />
+    
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b5342b'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' fill='%23f7f3ea' font-family='serif'%3E%E9%9F%B5%3C/text%3E%3C/svg%3E"
+    />
+<style>
+:root {
+  --ink: #221f1b;
+  --ink-2: #4a443c;
+  --ink-3: #7d756a;
+  --paper: #f6f2e8;
+  --paper-2: #fffdf8;
+  --line: #ded5c4;
+  --vermilion: #b5342b;
+  --vermilion-2: #d1493d;
+  --cyan: #2f4f5b;
+  --gold: #a9853f;
+  --green: #4b7355;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(60, 46, 28, 0.08);
+  font-synthesis-weight: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 12% -10%, rgba(181, 52, 43, 0.09), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(47, 79, 91, 0.1), transparent 55%),
+    var(--paper);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", SimSun, serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ------------------------------------------------------------ 登录层 */
+.gate {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    linear-gradient(160deg, rgba(34, 31, 27, 0.92), rgba(47, 79, 91, 0.88)),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 10px);
+  z-index: 50;
+}
+
+.gate[hidden] {
+  display: none;
+}
+
+.gate-card {
+  width: min(420px, 100%);
+  background: var(--paper-2);
+  border-radius: 20px;
+  padding: 40px 34px 30px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(169, 133, 63, 0.35);
+}
+
+.gate-seal {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 14px;
+  border-radius: 12px;
+  background: var(--vermilion);
+  color: #fff;
+  font-family: "Songti SC", serif;
+  font-size: 34px;
+  line-height: 62px;
+  box-shadow: 0 6px 18px rgba(181, 52, 43, 0.32);
+}
+
+.gate-card h1 {
+  font-size: 27px;
+  letter-spacing: 0.16em;
+}
+
+.gate-sub {
+  margin: 8px 0 24px;
+  color: var(--ink-3);
+  font-size: 13.5px;
+}
+
+.gate-form {
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.gate-form label,
+.form-panel label,
+.settings-panel label {
+  display: grid;
+  gap: 6px;
+}
+
+.gate-form label span,
+.form-panel label span,
+.settings-panel label span,
+.block-label {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+}
+
+input,
+select,
+textarea {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.16s, box-shadow 0.16s;
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--vermilion);
+  box-shadow: 0 0 0 3px rgba(181, 52, 43, 0.12);
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.65;
+}
+
+.btn {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  background: #fff;
+  transition: transform 0.12s, background 0.16s, border-color 0.16s, color 0.16s;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--vermilion);
+  color: #fff;
+  border-color: var(--vermilion);
+  box-shadow: 0 6px 16px rgba(181, 52, 43, 0.22);
+}
+
+.btn-primary:hover {
+  background: var(--vermilion-2);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink-2);
+}
+
+.btn-ghost:hover {
+  border-color: var(--vermilion);
+  color: var(--vermilion);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.gate-hint {
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+  margin: 4px 0 0;
+}
+
+.gate-hint.is-error {
+  color: var(--vermilion);
+}
+
+.gate-foot {
+  margin: 22px 0 0;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------ 布局 */
+.app {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr) 306px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, #2b2621, #221f1b);
+  color: #ece5d8;
+  padding: 22px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border-right: 1px solid rgba(169, 133, 63, 0.25);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.brand-seal {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--vermilion);
+  color: #fff;
+  font-family: "Songti SC", serif;
+  font-size: 23px;
+  line-height: 40px;
+  text-align: center;
+  flex: none;
+}
+
+.brand strong {
+  display: block;
+  font-family: "Songti SC", serif;
+  font-size: 17px;
+  letter-spacing: 0.1em;
+}
+
+.brand span {
+  font-size: 11.5px;
+  color: rgba(236, 229, 216, 0.55);
+}
+
+.nav {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: 0;
+  color: rgba(236, 229, 216, 0.78);
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.16s, color 0.16s;
+}
+
+.nav-item i {
+  font-style: normal;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.09);
+  font-size: 12px;
+  line-height: 22px;
+  text-align: center;
+  flex: none;
+  font-family: "Songti SC", serif;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.nav-item.is-active {
+  background: rgba(181, 52, 43, 0.9);
+  color: #fff;
+}
+
+.nav-item.is-active i {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-item.ghost {
+  font-size: 13px;
+  color: rgba(236, 229, 216, 0.6);
+}
+
+.side-foot {
+  display: grid;
+  gap: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  padding-top: 12px;
+}
+
+.engine-badge {
+  font-size: 11.5px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(169, 133, 63, 0.2);
+  color: #e6d6ae;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.engine-badge.is-live {
+  background: rgba(75, 115, 85, 0.3);
+  color: #cfe6d4;
+}
+
+.main {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 26px;
+}
+
+.view {
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.view.is-active {
+  display: flex;
+}
+
+.view-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 18px;
+}
+
+.view-head h2 {
+  font-size: 22px;
+}
+
+.view-head p {
+  margin: 6px 0 0;
+  color: var(--ink-3);
+  font-size: 13.5px;
+  max-width: 62ch;
+}
+
+.head-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: none;
+}
+
+.head-actions input,
+.head-actions select {
+  width: 220px;
+}
+
+.panel {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+/* ------------------------------------------------------------ 问答 */
+.chat-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  gap: 12px;
+}
+
+.chat-scroll {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-right: 6px;
+}
+
+.msg {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.msg.user {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-family: "Songti SC", serif;
+  font-size: 16px;
+}
+
+.msg.agent .avatar {
+  background: var(--vermilion);
+  color: #fff;
+}
+
+.msg.user .avatar {
+  background: var(--cyan);
+  color: #fff;
+}
+
+.bubble {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  max-width: min(760px, 82%);
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.msg.user .bubble {
+  background: #efe9dd;
+  border-color: #e0d7c6;
+}
+
+.msg-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.tagline {
+  font-size: 11.5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(47, 79, 91, 0.1);
+  color: var(--cyan);
+}
+
+.tagline.warn {
+  background: rgba(181, 52, 43, 0.12);
+  color: var(--vermilion);
+}
+
+.tagline.ok {
+  background: rgba(75, 115, 85, 0.14);
+  color: var(--green);
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color 0.16s, color 0.16s;
+}
+
+.chip:hover {
+  border-color: var(--vermilion);
+  color: var(--vermilion);
+}
+
+.composer {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+}
+
+.composer textarea {
+  border: 0;
+  box-shadow: none;
+  padding: 8px 6px;
+  max-height: 140px;
+}
+
+.composer textarea:focus {
+  box-shadow: none;
+}
+
+.composer-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------ 工坊 */
+.studio {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  min-height: 0;
+}
+
+.form-panel {
+  display: grid;
+  gap: 13px;
+  position: sticky;
+  top: 0;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-hint {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.result-panel {
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px dashed var(--line);
+  flex-wrap: wrap;
+}
+
+.result-meta {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.result-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.result-body {
+  flex: 1;
+  overflow: auto;
+}
+
+.empty {
+  color: var(--ink-3);
+  font-size: 13.5px;
+}
+
+.empty ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
+/* ------------------------------------------------------------ 审核 */
+.audit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.row-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.finding {
+  border-left: 3px solid var(--line);
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: #fdfaf4;
+  border-radius: 0 10px 10px 0;
+}
+
+.finding.block {
+  border-color: var(--vermilion);
+  background: rgba(181, 52, 43, 0.06);
+}
+
+.finding.warn {
+  border-color: var(--gold);
+  background: rgba(169, 133, 63, 0.08);
+}
+
+.finding.notice {
+  border-color: var(--cyan);
+  background: rgba(47, 79, 91, 0.06);
+}
+
+.finding h5 {
+  margin: 0 0 4px;
+  font-size: 13.5px;
+}
+
+.finding p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.finding .replace {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--green);
+}
+
+.verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  margin-bottom: 12px;
+}
+
+.verdict.pass {
+  background: rgba(75, 115, 85, 0.14);
+  color: var(--green);
+}
+
+.verdict.notice {
+  background: rgba(47, 79, 91, 0.12);
+  color: var(--cyan);
+}
+
+.verdict.warn {
+  background: rgba(169, 133, 63, 0.16);
+  color: #8a6b24;
+}
+
+.verdict.block {
+  background: rgba(181, 52, 43, 0.14);
+  color: var(--vermilion);
+}
+
+/* ------------------------------------------------------------ 知识库 */
+.library {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.kb-card {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 15px;
+  cursor: pointer;
+  transition: transform 0.14s, box-shadow 0.14s, border-color 0.14s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kb-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(181, 52, 43, 0.5);
+  box-shadow: 0 14px 28px rgba(60, 46, 28, 0.12);
+}
+
+.kb-card h4 {
+  font-size: 16px;
+}
+
+.kb-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kb-pill {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(47, 79, 91, 0.09);
+  color: var(--cyan);
+}
+
+.kb-pill.red {
+  background: rgba(181, 52, 43, 0.1);
+  color: var(--vermilion);
+}
+
+.kb-card p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.drawer {
+  position: fixed;
+  inset: 0;
+  background: rgba(34, 31, 27, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 30px;
+  z-index: 40;
+}
+
+.drawer[hidden] {
+  display: none;
+}
+
+.drawer-inner {
+  width: min(720px, 100%);
+  max-height: 84vh;
+  overflow: auto;
+  position: relative;
+  padding: 26px 28px;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------ 看板 */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.metric {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.metric strong {
+  font-family: "Songti SC", serif;
+  font-size: 28px;
+  color: var(--vermilion);
+  display: block;
+  line-height: 1.2;
+}
+
+.metric span {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.dashboard .panel,
+#view-dashboard .panel {
+  margin-bottom: 16px;
+}
+
+#view-dashboard .panel h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.value-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fdfaf4;
+}
+
+.value-card strong {
+  font-family: "Songti SC", serif;
+  font-size: 16px;
+  color: var(--vermilion);
+}
+
+.value-card em {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-left: 6px;
+}
+
+.value-card p {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.value-links {
+  margin-top: 10px;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+}
+
+.value-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.value-links li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.value-links li b {
+  flex: 0 0 auto;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.value-links li span:last-child {
+  flex: 1;
+}
+
+.link-kind {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 10.5px;
+  flex: 0 0 auto;
+}
+
+.link-kind.heritage { background: var(--vermilion); }
+.link-kind.brand { background: var(--gold); }
+.link-kind.spirit { background: #7f1d1d; }
+.link-kind.festival { background: var(--cyan); }
+
+.kb-jump {
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: var(--cyan);
+  font: inherit;
+  cursor: pointer;
+}
+
+.kb-jump:hover {
+  text-decoration: underline;
+}
+
+.scene-row {
+  border-top: 1px dashed var(--line);
+  padding: 12px 0;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.scene-row:first-child {
+  border-top: 0;
+}
+
+.scene-row h5 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.scene-row p {
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.scene-row .kpi {
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.edu-list {
+  display: grid;
+  gap: 10px;
+}
+
+.edu-item {
+  border-left: 3px solid var(--gold);
+  padding-left: 12px;
+}
+
+.edu-item strong {
+  font-family: "Songti SC", serif;
+  font-size: 14.5px;
+}
+
+.edu-item p {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+/* ------------------------------------------------------------ 关于 */
+.about {
+  display: grid;
+  gap: 16px;
+}
+
+.about .panel h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.about .panel p,
+.about .panel li {
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.about ol,
+.about ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 8px 14px;
+  font-size: 13.5px;
+}
+
+.kv dt {
+  color: var(--ink-3);
+}
+
+.kv dd {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------ 设置 */
+.settings-panel {
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.prompt-pre {
+  background: #f1ece1;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 12.5px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color: var(--ink-2);
+  margin: 0;
+  max-height: 340px;
+  overflow: auto;
+}
+
+/* ------------------------------------------------------------ 右侧栏 */
+.rail {
+  background: rgba(255, 253, 248, 0.7);
+  border-left: 1px solid var(--line);
+  padding: 24px 18px;
+  overflow: auto;
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.rail-block h4 {
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0.14em;
+  margin-bottom: 10px;
+}
+
+.rail-list {
+  display: grid;
+  gap: 8px;
+}
+
+.rail-empty {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.cite {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 11px;
+  background: var(--paper-2);
+  font-size: 12.5px;
+}
+
+.cite strong {
+  display: block;
+  font-size: 13px;
+}
+
+.cite span {
+  color: var(--ink-3);
+  font-size: 11.5px;
+}
+
+.value-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.vchip {
+  font-size: 11.5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(181, 52, 43, 0.1);
+  color: var(--vermilion);
+}
+
+/* ------------------------------------------------------------ Markdown */
+.markdown {
+  font-size: 13.8px;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+.markdown h1 {
+  font-size: 19px;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+.markdown h2 {
+  font-size: 15.5px;
+  color: var(--vermilion);
+  margin: 18px 0 8px;
+  padding-left: 10px;
+  border-left: 3px solid var(--vermilion);
+}
+
+.markdown h3 {
+  font-size: 14.5px;
+  margin: 14px 0 6px;
+}
+
+.markdown blockquote {
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: rgba(47, 79, 91, 0.06);
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 8px 8px 0;
+  color: var(--ink-3);
+  font-size: 12.5px;
+}
+
+.markdown ul {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+
+.markdown li {
+  margin: 3px 0;
+}
+
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 12.5px;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid var(--line);
+  padding: 7px 9px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown th {
+  background: #f1ece1;
+  font-weight: 600;
+}
+
+.markdown strong {
+  color: var(--ink);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: #f6f2e8;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  z-index: 60;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+}
+
+.toast[hidden] {
+  display: none;
+}
+
+.typing span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  animation: blink 1.1s infinite;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+@keyframes blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1280px) {
+  .app {
+    grid-template-columns: 212px minmax(0, 1fr);
+  }
+  .rail {
+    display: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .sidebar {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    overflow-x: auto;
+  }
+  .brand {
+    border: 0;
+    padding: 0;
+  }
+  .nav {
+    display: flex;
+    gap: 4px;
+  }
+  .nav-item {
+    padding: 8px 10px;
+    font-size: 12.5px;
+  }
+  .side-foot {
+    border: 0;
+    padding: 0;
+    display: flex;
+  }
+  .engine-badge {
+    display: none;
+  }
+  .studio,
+  .audit {
+    grid-template-columns: 1fr;
+  }
+  .form-panel {
+    position: static;
+  }
+}
+
+/* ------------------------------------------------------------ 条目详情：图文 + 视频 */
+.entry-hero {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+}
+
+.entry-hero-seal {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: "Songti SC", serif;
+  font-size: 24px;
+  flex: none;
+  box-shadow: 0 6px 14px rgba(60, 46, 28, 0.16);
+}
+
+.entry-hero h2 {
+  margin: 0;
+  font-size: 22px;
+  color: var(--ink);
+}
+
+.entry-hero .kb-meta {
+  margin-top: 7px;
+}
+
+.tone-heritage {
+  background: linear-gradient(120deg, rgba(181, 52, 43, 0.14), rgba(181, 52, 43, 0.02));
+}
+
+.tone-heritage .entry-hero-seal {
+  background: var(--vermilion);
+}
+
+.tone-brand {
+  background: linear-gradient(120deg, rgba(169, 133, 63, 0.18), rgba(169, 133, 63, 0.03));
+}
+
+.tone-brand .entry-hero-seal {
+  background: var(--gold);
+}
+
+.tone-spirit {
+  background: linear-gradient(120deg, rgba(122, 29, 29, 0.18), rgba(122, 29, 29, 0.03));
+}
+
+.tone-spirit .entry-hero-seal {
+  background: #7f1d1d;
+}
+
+.tone-festival {
+  background: linear-gradient(120deg, rgba(47, 79, 91, 0.15), rgba(47, 79, 91, 0.03));
+}
+
+.tone-festival .entry-hero-seal {
+  background: var(--cyan);
+}
+
+.entry-video {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  background: var(--paper2);
+}
+
+.video-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(120deg, rgba(47, 79, 91, 0.08), transparent 70%);
+  transition: background 0.16s;
+}
+
+.video-card:hover {
+  background: linear-gradient(120deg, rgba(47, 79, 91, 0.14), transparent 70%);
+}
+
+.video-play {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--vermilion);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  flex: none;
+  box-shadow: 0 6px 14px rgba(181, 52, 43, 0.3);
+}
+
+.video-card strong {
+  display: block;
+  font-size: 14px;
+}
+
+.video-card span {
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.video-links {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 14px;
+  flex-wrap: wrap;
+}
+
+.video-links a {
+  font-size: 12px;
+  color: var(--cyan);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  padding: 4px 11px;
+  border-radius: 999px;
+  transition: border-color 0.16s, background 0.16s;
+}
+
+.video-links a:hover {
+  border-color: var(--cyan);
+  background: rgba(47, 79, 91, 0.06);
+}
+
+/* 知识卡片：分类色边 + 播放徽标 */
+.kb-card.kind-heritage {
+  border-top: 3px solid var(--vermilion);
+}
+
+.kb-card.kind-brand {
+  border-top: 3px solid var(--gold);
+}
+
+.kb-card.kind-spirit {
+  border-top: 3px solid #7f1d1d;
+}
+
+.kb-card.kind-festival {
+  border-top: 3px solid var(--cyan);
+}
+
+.kb-pill.vid {
+  background: rgba(181, 52, 43, 0.12);
+  color: var(--vermilion);
+}
+
+/* ------------------------------------------------------------ 看板：结构条形图 */
+.kb-dist {
+  display: grid;
+  gap: 16px;
+}
+
+.kb-dist-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 54px;
+  gap: 16px;
+  align-items: center;
+}
+
+.kb-dist-row .bar-label {
+  font-size: 13.5px;
+  color: var(--ink2);
+}
+
+.kb-dist-row .bar-label em {
+  font-style: normal;
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+.bar-track {
+  height: 18px;
+  background: #efe9dd;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  min-width: 18px;
+}
+
+.kb-dist-row strong {
+  text-align: right;
+  font-family: "Songti SC", serif;
+  font-size: 19px;
+}
+
+.value-card.lv-social {
+  border-top: 3px solid var(--gold);
+}
+
+.value-card {
+  border-top: 3px solid var(--vermilion);
+}
+
+.value-card.lv-civic {
+  border-top: 3px solid var(--cyan);
+}
+
+/* ------------------------------------------------------------ 看板：场景卡片 */
+.scene-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.scene-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  background: #fdfaf4;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.scene-card .sc-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.scene-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--cyan);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: "Songti SC", serif;
+  font-size: 16px;
+  flex: none;
+}
+
+.scene-card h5 {
+  margin: 0;
+  font-size: 14.5px;
+}
+
+.scene-card p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+
+.scene-card .sc-deliv {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scene-card .sc-deliv span {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(181, 52, 43, 0.08);
+  color: var(--vermilion);
+}
+
+.scene-card .kpi {
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+/* ------------------------------------------------------------ 看板：育人价值卡片 */
+.edu-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.edu-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  background: #fdfaf4;
+  border-left: 3px solid var(--gold);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.edu-card .scene-icon {
+  flex: none;
+  margin-top: 1px;
+}
+
+.edu-card > div {
+  flex: 1;
+}
+
+.edu-card strong {
+  font-family: "Songti SC", serif;
+  font-size: 14.5px;
+}
+
+.edu-card p {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+
+/* ------------------------------------------------------------ 作品说明：可视化排版 */
+.about-hero {
+  background: linear-gradient(130deg, #2b2621, #221f1b);
+  color: #ece5d8;
+  border-radius: 16px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.about-seal {
+  width: 66px;
+  height: 66px;
+  border-radius: 14px;
+  background: var(--vermilion);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: "Songti SC", serif;
+  font-size: 34px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+.about-hero h3 {
+  color: #fff;
+  font-size: 22px;
+}
+
+.about-hero .sub {
+  color: rgba(236, 229, 216, 0.62);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.about-hero .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.about-hero .tags span {
+  font-size: 12px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ece5d8;
+}
+
+.ov-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.ov-tile {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 13px;
+  background: #fdfaf4;
+}
+
+.ov-tile dt {
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.ov-tile dd {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--ink2);
+}
+
+.problem-grid,
+.feature-grid,
+.innov-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.problem-card,
+.feature-card,
+.innov-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  background: #fdfaf4;
+}
+
+.problem-card .num,
+.innov-card .num {
+  font-family: "Songti SC", serif;
+  font-size: 25px;
+  color: var(--vermilion);
+}
+
+.innov-card .num {
+  color: var(--gold);
+}
+
+.problem-card strong,
+.feature-card strong,
+.innov-card strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.problem-card p,
+.innov-card p {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+
+.feature-card {
+  display: flex;
+  gap: 12px;
+}
+
+.feature-card .fc-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--vermilion);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: "Songti SC", serif;
+  font-size: 18px;
+  flex: none;
+}
+
+.feature-card p {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+
+.about .panel h3 {
+  margin-bottom: 12px;
+}
+
+/* ------------------------------------------------------------ 相关作品 */
+
+.works-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.works-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--cyan);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 12px;
+  background: #fdfaf4;
+  transition: border-color 0.16s, color 0.16s;
+}
+
+.works-list a:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.works-list a span {
+  color: var(--ink3);
+  font-size: 11px;
+}
+
+</style>
+</head>
+<body>
+
+    <!-- 登录层 -->
+    <div class="gate" id="gate">
+      <div class="gate-card">
+        <div class="gate-seal">韵</div>
+        <h1>华韵数智</h1>
+        <p class="gate-sub">非物质文化遗产与中华老字号 · 校园文化AIGC智能体</p>
+        <form id="login-form" class="gate-form">
+          <label>
+            <span>测试账号</span>
+            <input id="login-user" type="text" value="demo" autocomplete="username" />
+          </label>
+          <label>
+            <span>口令</span>
+            <input id="login-pass" type="password" value="huayun2026" autocomplete="current-password" />
+          </label>
+          <button type="submit" class="btn btn-primary">进入工作台</button>
+          <button type="button" class="btn btn-ghost" id="guest-btn">以游客身份体验</button>
+          <p class="gate-hint" id="gate-hint">
+            演示账号 demo / huayun2026　·　学生账号 student / xueyuan2026
+          </p>
+        </form>
+        <p class="gate-foot">本作品坚持社会主义核心价值观引领，内置正向内容审核机制。</p>
+      </div>
+    </div>
+
+    <!-- 主界面 -->
+    <div class="app" id="app" hidden>
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-seal">韵</div>
+          <div>
+            <strong>华韵数智</strong>
+            <span>文化AIGC智能体</span>
+          </div>
+        </div>
+        <nav class="nav" id="nav">
+          <button class="nav-item is-active" data-view="chat"><i>问</i>智能问答</button>
+          <button class="nav-item" data-view="studio"><i>创</i>文案工坊</button>
+          <button class="nav-item" data-view="audit"><i>审</i>内容审核</button>
+          <button class="nav-item" data-view="library"><i>库</i>知识库</button>
+          <button class="nav-item" data-view="dashboard"><i>数</i>数据看板</button>
+          <button class="nav-item" data-view="about"><i>关</i>作品说明</button>
+        </nav>
+        <div class="side-foot">
+          <div class="engine-badge" id="engine-badge">本地知识库引擎</div>
+          <button class="nav-item ghost" data-view="settings"><i>设</i>模型设置</button>
+          <button class="nav-item ghost" id="logout-btn"><i>退</i>退出登录</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- 智能问答 -->
+        <section class="view is-active" id="view-chat">
+          <header class="view-head">
+            <div>
+              <h2>智能问答</h2>
+              <p>非遗项目、老字号、革命文化与先进文化、传统节日的知识解答，答案带引用来源。</p>
+            </div>
+            <div class="head-actions">
+              <button class="btn btn-ghost" id="chat-clear">清空会话</button>
+            </div>
+          </header>
+          <div class="chat-wrap">
+            <div class="chat-scroll" id="chat-scroll"></div>
+            <div class="chips" id="chat-chips"></div>
+            <form class="composer" id="chat-form">
+              <textarea id="chat-input" rows="1" placeholder="例如：剪纸的技艺特点有哪些？适合做成短视频的红色文化选题有哪些？"></textarea>
+              <button type="submit" class="btn btn-primary" id="chat-send">发送</button>
+            </form>
+            <p class="composer-hint">支持 8 类创作任务，写清楚对象与用途即可，例如「为同仁堂写一篇公众号品牌故事」。</p>
+          </div>
+        </section>
+
+        <!-- 文案工坊 -->
+        <section class="view" id="view-studio">
+          <header class="view-head">
+            <div>
+              <h2>文案工坊</h2>
+              <p>选择任务类型与主题，一次生成可直接使用的宣传内容。</p>
+            </div>
+          </header>
+          <div class="studio">
+            <form class="panel form-panel" id="gen-form">
+              <label>
+                <span>任务类型</span>
+                <select id="gen-type">
+                  <option value="ich_copy">非遗介绍文案</option>
+                  <option value="brand_story">老字号品牌故事</option>
+                  <option value="poster">宣传海报文案</option>
+                  <option value="activity">校园活动方案</option>
+                  <option value="slogan">宣传标语</option>
+                  <option value="speech">宣讲稿 / 微团课</option>
+                  <option value="quiz">知识竞赛题库</option>
+                </select>
+              </label>
+              <label>
+                <span>主题对象</span>
+                <input id="gen-topic" list="kb-topics" placeholder="输入或选择，例如：剪纸 / 同仁堂 / 长征精神" required />
+                <datalist id="kb-topics"></datalist>
+              </label>
+              <div class="grid-2">
+                <label>
+                  <span>目标平台</span>
+                  <select id="gen-platform">
+                    <option value="公众号">公众号</option>
+                    <option value="小红书">小红书</option>
+                    <option value="短视频">短视频脚本</option>
+                    <option value="微博">微博</option>
+                    <option value="校园海报">校园海报</option>
+                    <option value="">不限</option>
+                  </select>
+                </label>
+                <label>
+                  <span>目标受众</span>
+                  <select id="gen-audience">
+                    <option value="青年学生">青年学生</option>
+                    <option value="大学生">大学生</option>
+                    <option value="中学生">中学生</option>
+                    <option value="教师">教师</option>
+                    <option value="社区居民">社区居民</option>
+                  </select>
+                </label>
+              </div>
+              <div class="grid-2">
+                <label>
+                  <span>语言风格</span>
+                  <select id="gen-style">
+                    <option value="科普">科普</option>
+                    <option value="青春">青春</option>
+                    <option value="文艺">文艺</option>
+                    <option value="庄重">庄重</option>
+                  </select>
+                </label>
+                <label id="scene-field">
+                  <span>应用场景</span>
+                  <select id="gen-scene"></select>
+                </label>
+              </div>
+              <button type="submit" class="btn btn-primary" id="gen-submit">生成内容</button>
+              <p class="form-hint">生成结果自动经过正向内容审核；命中风险表述时会给出改写建议。</p>
+            </form>
+
+            <div class="panel result-panel">
+              <div class="result-head">
+                <div class="result-meta" id="result-meta">生成结果将显示在这里</div>
+                <div class="result-actions">
+                  <button class="btn btn-ghost" id="result-copy" disabled>复制</button>
+                  <button class="btn btn-ghost" id="result-download" disabled>下载 Markdown</button>
+                </div>
+              </div>
+              <div class="result-body markdown" id="result-body">
+                <div class="empty">
+                  <p>左侧选择任务类型与主题对象，即可生成文化宣传内容。</p>
+                  <ul>
+                    <li>非遗介绍文案：按平台分别成稿，附带话题标签</li>
+                    <li>老字号品牌故事：源起、技艺、文化、传承、寄语五段结构</li>
+                    <li>宣传海报文案：主标题、标语、正文与视觉建议一次给全</li>
+                    <li>校园活动方案：流程表、物料、分工与合规提示</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 内容审核 -->
+        <section class="view" id="view-audit">
+          <header class="view-head">
+            <div>
+              <h2>内容审核</h2>
+              <p>发布前先过一遍：检查历史虚无主义、绝对化用语、迷信包装、功效宣称等风险，并给出可替换表述。</p>
+            </div>
+          </header>
+          <div class="audit">
+            <div class="panel">
+              <label class="block-label" for="audit-input">待审文本</label>
+              <textarea id="audit-input" rows="10" placeholder="粘贴将要发布的推文、海报文案或活动通知……"></textarea>
+              <div class="row-actions">
+                <button class="btn btn-primary" id="audit-run">开始审核</button>
+                <button class="btn btn-ghost" id="audit-sample">填入示例</button>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="result-head"><div class="result-meta">审核报告</div></div>
+              <div id="audit-report" class="audit-report">
+                <div class="empty"><p>审核结果会分级显示：红线禁止输出、风险需改写、提示需人工确认。</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 知识库 -->
+        <section class="view" id="view-library">
+          <header class="view-head">
+            <div>
+              <h2>知识库</h2>
+              <p id="lib-count">加载中……</p>
+            </div>
+            <div class="head-actions">
+              <input id="lib-search" type="search" placeholder="搜索条目，例如：剪纸 / 诚信 / 端午" />
+              <select id="lib-kind">
+                <option value="">全部类型</option>
+                <option value="heritage">非物质文化遗产</option>
+                <option value="brand">中华老字号</option>
+                <option value="spirit">革命文化与先进文化</option>
+                <option value="festival">传统节日</option>
+              </select>
+            </div>
+          </header>
+          <div class="library" id="lib-grid"></div>
+          <div class="drawer" id="lib-drawer" hidden>
+            <div class="drawer-inner panel">
+              <button class="drawer-close" id="drawer-close">×</button>
+              <div id="drawer-body"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 数据看板 -->
+        <section class="view" id="view-dashboard">
+          <header class="view-head">
+            <div>
+              <h2>数据看板</h2>
+              <p>知识库规模、社会主义核心价值观映射与应用场景。</p>
+            </div>
+          </header>
+          <div class="metrics" id="metrics"></div>
+          <div class="panel">
+            <h3>知识库结构</h3>
+            <div class="kb-dist" id="kb-dist"></div>
+          </div>
+          <div class="panel">
+            <h3>社会主义核心价值观 · 素材映射</h3>
+            <div class="value-grid" id="value-grid"></div>
+          </div>
+          <div class="panel">
+            <h3>应用场景与解决方案</h3>
+            <div class="scene-cards" id="scene-table"></div>
+          </div>
+          <div class="panel">
+            <h3>育人价值</h3>
+            <div class="edu-cards" id="edu-list"></div>
+          </div>
+        </section>
+
+        <!-- 作品说明 -->
+        <section class="view" id="view-about">
+          <header class="view-head">
+            <div>
+              <h2>作品说明</h2>
+              <p>校园网络文化节 · 数智赛道 · 智能体AIGC应用</p>
+            </div>
+          </header>
+          <div class="about" id="about-body"></div>
+        </section>
+
+        <!-- 设置 -->
+        <section class="view" id="view-settings">
+          <header class="view-head">
+            <div>
+              <h2>模型设置</h2>
+              <p>默认使用本地知识库生成引擎，功能完整且可离线运行。填入任意 OpenAI 兼容接口即可切换为大模型生成。</p>
+            </div>
+          </header>
+          <div class="panel settings-panel">
+            <label><span>接口地址 Base URL</span><input id="cfg-base" placeholder="https://api.openai.com/v1" /></label>
+            <label><span>API Key</span><input id="cfg-key" type="password" placeholder="sk-..." /></label>
+            <label><span>模型名称</span><input id="cfg-model" placeholder="gpt-4o-mini" /></label>
+            <div class="row-actions">
+              <button class="btn btn-primary" id="cfg-save">保存并启用</button>
+              <button class="btn btn-ghost" id="cfg-clear">清除配置</button>
+            </div>
+            <p class="form-hint">密钥仅保存在本机浏览器 localStorage 中，生成时由浏览器直接发送给所填的大模型接口，不会经过本应用。</p>
+            <h3>系统提示词（智能体人格）</h3>
+            <pre class="prompt-pre" id="prompt-pre">加载中……</pre>
+          </div>
+        </section>
+      </main>
+
+      <aside class="rail">
+        <div class="rail-block">
+          <h4>引用来源</h4>
+          <div id="rail-citations" class="rail-list"><p class="rail-empty">生成内容后显示命中的知识库条目。</p></div>
+        </div>
+        <div class="rail-block">
+          <h4>内容审核</h4>
+          <div id="rail-audit" class="rail-list"><p class="rail-empty">每次生成都会自动通过审核规则库。</p></div>
+        </div>
+        <div class="rail-block">
+          <h4>价值落点</h4>
+          <div class="value-chips" id="rail-values"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    
+  
+<script type="module">
+const __DATA__ = {"heritage":{"version":"1.0.0","note":"非物质文化遗产知识库。数据用于教学与文化宣传演示，具体名录、批次与传承人信息请以文化和旅游部及联合国教科文组织官方发布为准。","items":[{"id":"ich-kunqu","name":"昆曲","aliases":["昆剧","水磨调","昆山腔"],"category":"传统戏剧","level":"人类非物质文化遗产代表作名录（首批）","year":2001,"region":"起源于江苏昆山，流布全国，苏州为主要传承地","keywords":["昆曲","昆剧","水磨调","百戏之祖","牡丹亭","戏曲","雅部"],"summary":"昆曲起源于元末明初的江苏昆山一带，唱腔婉转细腻，因如江南水磨糯米粉般柔润而得名水磨调，被誉为百戏之祖。它将唱、念、做、打与文人剧本熔于一炉，是中国古典戏曲美学的集大成者。","craft":["唱腔以水磨调为骨，讲究字正腔圆、一唱三叹","身段程式细腻，讲究手眼身法步的整体配合","剧本多由文人创作，文学性强，如《牡丹亭》《长生殿》"],"culture":["体现中国古典审美中雅的追求，与诗词、绘画、园林同源","以情入戏，《牡丹亭》把个体情感的正当性写进舞台","承载江南文人的精神世界与汉语音韵之美"],"today":["青春版《牡丹亭》持续走进高校，吸引青年观众重回剧场","昆曲进校园、进社区成为非遗普及的常见形式"],"writing":["用百戏之祖做记忆锚点，一句话点明地位","用一唱三叹描述听觉体验，少堆专业术语","可引用一句原词，如原来姹紫嫣红开遍，让受众先感受美"],"values":["文明","和谐"],"scenes":["校园新媒体运营","非遗进校园"],"taboos":["不要把昆曲简化成老古董","引用唱词须核对原文，避免错字"],"works":[{"name":"牡丹亭","url":"https://zh.wikipedia.org/wiki/牡丹亭"},{"name":"长生殿","url":"https://zh.wikipedia.org/wiki/长生殿"}]},{"id":"ich-guqin","name":"古琴艺术","aliases":["七弦琴","瑶琴","琴"],"category":"传统音乐","level":"人类非物质文化遗产代表作名录","year":2003,"region":"全国流布，以江苏、北京、四川、浙江等地为重要传承区","keywords":["古琴","七弦琴","琴曲","高山流水","减字谱","文人音乐"],"summary":"古琴是中国最古老的弹拨乐器之一，有三千多年历史，七弦十三徽，音色深沉悠远。它不只是乐器，更是文人修身养性的载体，讲究琴德与琴心，与棋、书、画并称文人四艺。","craft":["以减字谱记谱，保留了大量古代琴曲与演奏手法","演奏讲究吟、猱、绰、注，追求音与意的合一","选材、髹漆、上弦等斫琴工序繁复，一把良琴需经年而成"],"culture":["知音相赏的典故意涵深厚，高山流水成为知己的代名词","琴道强调中正平和，与传统礼乐文化相互支撑","体现中国人以艺养心、向内求索的精神路径"],"today":["高校古琴社团与通识课程增多，青年习琴者持续增长","古琴与影视、流行音乐的跨界尝试扩大了受众面"],"writing":["用三千年的声音拉近距离，避免玄虚表达","把知音故事讲成情感共鸣点，适合短视频开场","慎用玄学化描述，突出其历史与人文价值"],"values":["文明","和谐"],"scenes":["校园新媒体运营","非遗进校园","文化志愿服务"],"taboos":["避免把古琴神秘化、玄学化","不要把古琴与养生功效直接挂钩宣传"],"works":[{"name":"高山流水","url":"https://zh.wikipedia.org/wiki/高山流水"},{"name":"广陵散","url":"https://zh.wikipedia.org/wiki/广陵散"}]},{"id":"ich-shufa","name":"中国书法","aliases":["书法","写字","翰墨","毛笔字"],"category":"传统美术","level":"人类非物质文化遗产代表作名录","year":2009,"region":"全国","keywords":["书法","翰墨","篆隶楷行草","毛笔","碑帖","兰亭序","汉字"],"summary":"中国书法以毛笔书写汉字，通过点画、结构与章法表达性情与气象，涵盖篆、隶、楷、行、草五种书体。它既是记录汉语的技艺，也是最能体现中国人审美理想的艺术形式之一。","craft":["执笔、运腕、用墨有完整法度，讲究提按顿挫与中锋侧锋","结构讲计白当黑，章法讲行气贯通","临帖是入门正途，由形入神，取法经典碑帖"],"culture":["字如其人，书法承载中国对人格与修养的理解","与诗词、楹联、匾额结合，深度嵌入日常与文化空间","体现中国文字之美，是中华文明连续性的直观见证"],"today":["高校书法社团、书法课与汉字书写活动持续升温","书法文创、书法字体设计成为国潮设计的重要素材来源"],"writing":["强调书法就在身边，路牌、匾额、题字皆是入口","用一笔一画写中国作为传播主线，避免空泛抒情","可设计书写体验互动，让受众动手感受"],"values":["文明","敬业"],"scenes":["校园新媒体运营","非遗进校园","校园文化宣传"],"taboos":["不要用丑书、江湖体作品冒充传统书法","引用名家作品需注明作者与出处"],"works":[{"name":"兰亭序","url":"https://zh.wikipedia.org/wiki/兰亭序"},{"name":"祭侄文稿","url":"https://zh.wikipedia.org/wiki/祭侄文稿"}]},{"id":"ich-jianzhi","name":"中国剪纸","aliases":["剪纸","窗花","刻纸","剪花"],"category":"传统美术","level":"人类非物质文化遗产代表作名录","year":2009,"region":"河北蔚县、陕西延安、山东高密、山西中阳等地各具风格","keywords":["剪纸","窗花","刻纸","年节","民俗","镂空","喜花"],"summary":"中国剪纸用剪刀或刻刀在纸上镂空成图，贴于窗、墙、门、灯，是流传最广的民间美术之一。它把吉祥观念、生活理想与地方风情剪进方寸之间，逢年过节随处可见。","craft":["分剪纸与刻纸两类，讲究刀法连贯、线线相连","常见手法有阴刻、阳刻、阴阳结合，讲究千剪不断","喜花、窗花、门笺、鞋样花各有用途与形制"],"culture":["以谐音、象征表达吉祥，如蝙蝠寓福、石榴寓多子","与年节礼俗紧密结合，是民间生活美学最直接的表达","题材多取自劳动生活，是民众集体记忆的图像档案"],"today":["剪纸进课堂、进社区活动开展广泛，上手门槛低","剪纸元素被大量用于文创、海报与校园美陈设计"],"writing":["强调零门槛、可参与，最适合做互动体验类传播","把吉祥寓意讲清楚，比单纯展示图案更打动人","用一刀一纸剪出年味作为场景化切入点"],"values":["文明","和谐","友善"],"scenes":["非遗进校园","校园新媒体运营","文化志愿服务"],"taboos":["避免把民俗吉祥观念包装成封建迷信","使用传承人作品图像需取得授权或明确出处"]},{"id":"ich-jingju","name":"京剧","aliases":["国剧","皮黄","京戏"],"category":"传统戏剧","level":"人类非物质文化遗产代表作名录","year":2010,"region":"形成于北京，流布全国","keywords":["京剧","国剧","生旦净丑","皮黄","脸谱","梅兰芳","唱念做打"],"summary":"京剧形成于清代中后期的北京，融合徽调、汉调等多种声腔，以唱、念、做、打为四功，行当分生、旦、净、丑。它把程式化的表演推向高度成熟，被称为国剧。","craft":["西皮二黄为主要声腔，板式变化丰富","行当分工明确，脸谱色彩具有符号化的性格指向","四功五法构成完整的表演训练体系"],"culture":["程式不是僵化，而是高度提炼的生活表达方式","脸谱、服饰、锣鼓共同构成东方舞台美学","梅兰芳等艺术家把京剧带向世界，是文化交流的经典案例"],"today":["京剧进校园与京剧课间操等形式吸引青少年参与","短视频平台上的京剧片段剪辑、戏腔歌曲带动破圈传播"],"writing":["从一秒钟看懂脸谱这类知识切口入手，降低理解门槛","用行当与角色对照，解释忠奸善恶的符号体系","避免把京剧等同于唱老戏，要讲清程式之美"],"values":["文明","爱国"],"scenes":["校园新媒体运营","非遗进校园","校园文化宣传"],"taboos":["不要用戏谑方式解构历史人物与英烈形象","脸谱颜色含义需准确，避免张冠李戴"]},{"id":"ich-piying","name":"皮影戏","aliases":["灯影戏","影子戏","皮影子"],"category":"传统戏剧","level":"人类非物质文化遗产代表作名录","year":2011,"region":"陕西、甘肃、河北、四川、湖南等地","keywords":["皮影","灯影","驴皮","影人","幕后","光影"],"summary":"皮影戏用兽皮或纸板雕刻成影人，在灯光下隔幕操作并配以唱腔与伴奏来表演故事，被称为最早的动态影像艺术。它把雕刻、绘画、音乐、表演融于一体。","craft":["影人需经选皮、制皮、画稿、镂刻、敷彩、缀结等二十余道工序","雕刻讲究刀口利落、线条通透，影人可活动自如","表演者一人可操影、演唱、击乐，技艺高度综合"],"culture":["以光影讲故事，是中国民间对影像叙事的早期探索","剧目多取材历史演义与民间传说，承担着民间教化的功能","体现了民间艺人以简驭繁的创造智慧"],"today":["皮影与动画、数字投影结合，形成新的舞台语言","皮影手工体验课程在校园和研学活动中广受欢迎"],"writing":["用一千年前的光影动画形容皮影，天然有传播力","强调幕后一只手演千军万马的技术浪漫感","把影人制作工序讲成慢工细活的匠人故事"],"values":["文明","敬业"],"scenes":["非遗进校园","校园新媒体运营"],"taboos":["不要把影人制作说成简单手工","避免对民间信仰内容作猎奇化处理"]},{"id":"ich-nanyin","name":"南音","aliases":["泉州南音","南管","弦管"],"category":"传统音乐","level":"人类非物质文化遗产代表作名录","year":2009,"region":"福建泉州、厦门、漳州等地，随闽南人传播至东南亚","keywords":["南音","南管","弦管","琵琶","洞箫","闽南","御前清曲"],"summary":"南音流行于闽南及东南亚华人社区，由指、谱、曲三部分组成，用泉州方言演唱，乐器以琵琶、洞箫、二弦、三弦为主。它保留了古代音乐的诸多形态，被称为中国音乐史上的活化石。","craft":["琵琶横抱、洞箫竖吹，演奏姿势保留古制","工㐅谱为特有记谱法，与中原古乐一脉相承","演唱讲究咬字与气韵，讲究静、雅、缓"],"culture":["南音随闽南人下南洋，是海外华人的乡音纽带","体现中华文化通过海上丝绸之路向外传播的路径","礼乐相和的演奏方式强调群体协作与谦和"],"today":["南音进入中小学课堂，泉州等地普及度较高","南音社团与流行音乐人合作，尝试新的表达"],"writing":["用一句闽南乡音唤起海外华人的情感共鸣","讲清南音与古代音乐的承继关系，突出活态传承","把乡愁作为情感主线，比讲乐器构造更易传播"],"values":["文明","和谐","爱国"],"scenes":["非遗进校园","文化志愿服务","校园新媒体运营"],"taboos":["避免把南音与宗教仪式混为一谈","涉及方言演唱内容需准确标注"]},{"id":"ich-dongge","name":"侗族大歌","aliases":["大歌","嘎老"],"category":"传统音乐","level":"人类非物质文化遗产代表作名录","year":2009,"region":"贵州黎平、从江、榕江及广西三江等侗族聚居区","keywords":["侗族大歌","侗歌","多声部","无伴奏","稻鱼鸭","鼓楼"],"summary":"侗族大歌是侗族地区的多声部、无指挥、无伴奏民间合唱，歌声模拟蝉鸣鸟叫与流水，高低声部自然交织。它颠覆了外界对民间音乐只有单声部的印象。","craft":["高音声部主唱，低声部持续衬腔，形成自然和声","歌队以寨为单位，代代相传，多为女性歌队","演唱内容涵盖自然、劳动、爱情与礼俗"],"culture":["歌是侗族社会记忆的载体，以歌传史、以歌育人","模拟自然的演唱方式体现人与自然和谐共处的观念","鼓楼、风雨桥与大歌共同构成侗寨文化空间"],"today":["侗族大歌多次登上国内外舞台，被更多观众认识","侗寨研学与乡村文旅把大歌作为核心体验内容"],"writing":["用一人开腔、众人应和描述听觉冲击","强调无伴奏多声部这一反常识的知识点","把歌与乡土生活场景绑定，避免抽象赞美"],"values":["和谐","文明"],"scenes":["非遗进校园","文化志愿服务","校园文化宣传"],"taboos":["不要用少数民族风情猎奇化表述","涉及民族习俗须尊重并准确表述"]},{"id":"ich-zhusuan","name":"中国珠算","aliases":["珠算","算盘","筹算"],"category":"民俗","level":"人类非物质文化遗产代表作名录","year":2013,"region":"全国，以安徽黄山屯溪等地为重要传承地","keywords":["珠算","算盘","口诀","心算","数学","一上一"],"summary":"珠算以算盘为工具，用口诀进行加、减、乘、除与开方运算，是中国古代计算技术的代表。它推动了商业与数学的发展，并衍生出珠心算等现代教育形式。","craft":["口诀体系完整，如一上一、一下五去四，操作借助手指与算珠","拨珠讲究指法定型，长期训练可形成心算能力","算盘结构简单，却能完成复杂运算"],"culture":["体现中国数学注重实用与计算的传统","广泛用于古代商贸、赋税与工程，是经济活动的技术基础","口诀朗朗上口，是传统教育中口传心授的典型"],"today":["珠心算教学在一些中小学与培训机构延续","算盘作为文化符号进入数学教育与文创设计"],"writing":["用老工具算新账做对比式开头，容易引发好奇","把口诀的节奏感作为传播记忆点","适合与数学教育、财商启蒙话题结合"],"values":["富強","敬业"],"scenes":["非遗进校园","校园新媒体运营"],"taboos":["避免夸大珠心算的神奇功效","不要贬低现代计算方法抬高珠算"]},{"id":"ich-jieqi","name":"二十四节气","aliases":["节气","二十四节令"],"category":"民俗","level":"人类非物质文化遗产代表作名录","year":2016,"region":"全国","keywords":["二十四节气","节气","立春","冬至","农耕","物候","农历"],"summary":"二十四节气是中国人通过观察太阳周年运动、认知时令与物候变化而形成的知识体系与社会实践，涵盖天文、农事、养生与礼俗，被国际气象界称为中国第五大发明。","craft":["以太阳黄经每十五度为节点划分，全年二十四节","节气与物候、农事安排、饮食习俗紧密对应","各地在节气形成不同礼俗，如清明祭扫、冬至数九"],"culture":["体现天人合一、顺时而为的宇宙观与生活智慧","把自然节律写进日常饮食起居，是全民共享的文化时间表","节气诗词与谚语构成丰富的语言遗产"],"today":["节气主题文创、节气食谱、节气海报是校园传播的热门题材","节气与气象科普、劳动教育结合，进入课堂与研学"],"writing":["用节气做时间锚点，适合做成系列化内容","每个节气突出一个最容易被忽略的物候细节","把老一套与今天的生活对照，避免说教"],"values":["和谐","文明"],"scenes":["校园新媒体运营","校园文化宣传","非遗进校园"],"taboos":["不得把节气与迷信宜忌、算命内容捆绑","节气日期须准确，避免错配农事与物候"]},{"id":"ich-mujiegou","name":"中国传统木结构营造技艺","aliases":["榫卯","木结构营造","斗拱","营造技艺"],"category":"传统技艺","level":"人类非物质文化遗产代表作名录","year":2009,"region":"以北京、江苏、浙江、福建、安徽等地为代表","keywords":["榫卯","斗拱","营造技艺","木结构","不用钉子","宫殿","梁架"],"summary":"中国传统木结构营造技艺以榫卯连接木构件，不用或少用金属钉，通过梁架、斗拱等体系实现大跨度与抗震。它是中国古代建筑体系的技术内核。","craft":["榫卯以凹凸咬合传递受力，可拆可装，讲究严丝合缝","斗拱层层出挑，既是承重结构也是美学构件","工序包含选材、画线、开榫、试装、上架，讲究以口诀和模型传艺"],"culture":["体现以柔克刚、刚柔相济的结构哲学","模数化思维让建筑实现标准化与灵活组合","故宫、应县木塔等实例是中华营造智慧的现实证据"],"today":["榫卯积木与木工体验成为热门研学与文创方向","现代设计中重新借鉴榫卯结构，减少胶黏剂使用"],"writing":["用一滴胶不用、一颗钉不钉做悬念开头","讲清榫卯如何在地震中耗能减震，用原理说话","结合国潮积木与手作体验，突出可感可玩"],"values":["文明","敬业"],"scenes":["非遗进校园","校园新媒体运营"],"taboos":["避免绝对化表述，如完全不用一颗钉","涉及古建筑实例须准确，不可随意张冠李戴"],"works":[{"name":"北京故宫","url":"https://zh.wikipedia.org/wiki/故宫"},{"name":"应县木塔","url":"https://zh.wikipedia.org/wiki/应县木塔"}]},{"id":"ich-yunjin","name":"南京云锦织造技艺","aliases":["云锦","南京云锦","妆花"],"category":"传统技艺","level":"人类非物质文化遗产代表作名录","year":2009,"region":"江苏南京","keywords":["云锦","妆花","大花楼织机","通经断纬","织金","寸锦寸金"],"summary":"南京云锦以通经断纬、挖花盘织为核心技艺，用金银线织出华美纹样，素有寸锦寸金之称。大花楼织机需两人上下配合操作，代表了中国丝织技艺的高峰。","craft":["通经断纬，色彩可随花纹自由更换而不贯穿全幅","大花楼织机由拽花工与织手配合，一天仅能织出几厘米","图案设计需先意匠挑花，把画稿转译为织造程序"],"culture":["云锦纹样多用龙、牡丹、云纹，承载吉祥观念与礼制秩序","体现中国丝织工艺在配色与结构上的极致追求","是非遗技艺中慢工细活的典型代表"],"today":["云锦纹样被用于高定服装与国潮设计，重新进入年轻视野","数字化意匠设计提高了纹样设计与传承效率"],"writing":["用一天只织五厘米突出时间成本与匠人耐心","讲劝业与守护技艺的传承人故事，比讲工艺参数更动人","把云锦纹样解读成吉祥密码，适合图文传播"],"values":["文明","敬业","富强"],"scenes":["校园新媒体运营","非遗进校园"],"taboos":["不要把云锦简化为高档布料","创新应用需注明与传统技艺的关系"]},{"id":"ich-xuanzhi","name":"宣纸制作技艺","aliases":["宣纸","泾县宣纸","千年寿纸"],"category":"传统技艺","level":"人类非物质文化遗产代表作名录","year":2009,"region":"安徽泾县","keywords":["宣纸","青檀皮","沙田稻草","捞纸","晒纸","千年寿纸"],"summary":"宣纸产于安徽泾县，以青檀皮和沙田稻草为原料，经百余道工序手工制成，润墨性好、耐老化，有千年寿纸之称。它是书画与古籍修复的重要材料。","craft":["原料需经浸泡、蒸煮、漂洗、日光漂白等长期处理","捞纸、晒纸、剪纸是决定品质的关键环节，全凭手感经验","配比决定纸性，皮料与草料比例影响润墨与韧性"],"culture":["纸的诞生支撑了书法、绘画与典籍的千年流传","体现中国人对自然的耐心索取与转化智慧","宣纸与中华文脉的延续直接相关"],"today":["宣纸仍是书画与古籍修复不可替代的用材","宣纸文创与手抄纸体验成为研学热门项目"],"writing":["用一张纸活一千年作为记忆点","讲青檀皮与稻草相遇的原料故事，画面感强","把古籍修复场景引入，说明其不可替代性"],"values":["文明","敬业"],"scenes":["非遗进校园","校园新媒体运营","文化志愿服务"],"taboos":["不要把宣纸等同于普通书画纸","避免夸大其收藏升值属性"]},{"id":"ich-huoyin","name":"中国活字印刷术","aliases":["活字印刷","毕昇","胶泥活字","木活字"],"category":"传统技艺","level":"人类非物质文化遗产代表作名录","year":2010,"region":"浙江瑞安木活字印刷术、福建宁化等地至今活态传承","keywords":["活字印刷","毕昇","木活字","泥活字","家谱","排版","印刷"],"summary":"活字印刷术由北宋毕昇发明，用可重复使用的单个字模排版印刷，极大降低了书籍复制成本。浙江瑞安等地的木活字印刷至今仍在用于印制家谱。","craft":["需完成刻字、检字、排版、刷墨、印刷等成套工序","木活字选用棠梨木，反字雕刻，字模按部首韵目存放","排版时以口诀检索字模，效率取决于检字体系"],"culture":["体现中国人复用与模块化的早期工程思维","推动知识大规模传播，改变了文明传承的速度","家谱印制让技艺与宗族记忆延续至今"],"today":["活字印刷体验成为校园与书店的热门手作项目","数字化排版与活字原理一脉相通，是很好的科技史教学切入点"],"writing":["用捡字、排版、刷墨的动手过程吸引参与","把毕昇的发明放进世界印刷史坐标里讲","适合与科技史、汉字之美话题联动"],"values":["文明","敬业"],"scenes":["非遗进校园","校园新媒体运营"],"taboos":["不要把毕昇与古腾堡作简单先后优劣断言","避免过度简化工艺步骤"]},{"id":"ich-longquanqingci","name":"龙泉青瓷传统烧制技艺","aliases":["龙泉青瓷","青瓷","梅子青","粉青"],"category":"传统技艺","level":"人类非物质文化遗产代表作名录","year":2009,"region":"浙江龙泉","keywords":["龙泉青瓷","青瓷","梅子青","粉青","开片","哥窑","弟窑","釉色"],"summary":"龙泉青瓷以梅子青、粉青的温润釉色著称，是世界上唯一入选人类非遗名录的陶瓷类项目。它讲究釉层厚润、器型端雅，把瓷器之美推向素净一路。","craft":["釉料配方与烧成曲线共同决定呈色，成品率受窑温制约","讲究多次施釉，釉层肥厚，形成如玉质感","器型追求简约端正，少装饰而重整体气韵"],"culture":["青瓷之色取法自然，体现中国人对温润含蓄的审美偏好","龙泉青瓷曾沿海上丝绸之路远销世界，是文化交流的见证","开片被视为天然之美，反映中国审美中对不圆满的接纳"],"today":["青瓷进入当代设计与茶器市场，形成新的生活方式产品","龙泉举办青瓷文化节，把技艺与城市品牌结合"],"writing":["用一句话形容釉色，如雨后青山、冰裂如玉","讲开片的不可控之美，是很好的对比式表达","结合茶器使用场景，让受众看到可用之美"],"values":["文明","和谐"],"scenes":["校园新媒体运营","非遗进校园","老字号品牌推广"],"taboos":["釉色描述避免堆砌玄虚形容词","陶瓷术语如开片、冰裂须使用准确"]},{"id":"ich-jingdezhen","name":"景德镇手工制瓷技艺","aliases":["景德镇","手工制瓷","青花","粉彩","瓷都"],"category":"传统技艺","level":"国家级非物质文化遗产代表性项目","year":2006,"region":"江西景德镇","keywords":["景德镇","手工制瓷","青花","粉彩","拉坯","瓷都","七十二道工序"],"summary":"景德镇手工制瓷技艺以七十二道工序分工协作著称，涵盖拉坯、利坯、画坯、施釉、烧窑等环节，形成青花、粉彩、颜色釉等多种装饰体系。","craft":["工序细分到极致，一器之成需多人协作完成","拉坯、利坯依赖手感与经验，器型一致性靠长期训练","画坯分勾线、分水等技法，青花讲究料分五色"],"culture":["集天下名窑之大成，体现中国陶瓷技术的集成创新","匠人分工体系是中国传统手工业组织方式的样本","瓷器是中国走向世界的文化名片"],"today":["景漂青年与陶溪川文创园让老瓷都聚集年轻创作者","陶瓷文化传承创新试验区推动研学与国际交流"],"writing":["用一件瓷器过七十二双手做可视化叙事","把工序分工讲成中国式协作精神","结合景漂青年的当代选择，讲传统与青春相遇"],"values":["文明","敬业","富强"],"scenes":["校园新媒体运营","非遗进校园","老字号品牌推广"],"taboos":["不要把景德镇瓷器笼统说成官窑出品","涉及历史年代与窑口须准确"]},{"id":"ich-suxiu","name":"苏绣","aliases":["苏州刺绣","镇湖刺绣","双面绣"],"category":"传统美术","level":"国家级非物质文化遗产代表性项目","year":2006,"region":"江苏苏州","keywords":["苏绣","刺绣","双面绣","乱针绣","劈丝","仿真绣","针法"],"summary":"苏绣以精细雅洁著称，一根丝线可劈成数十缕，双面绣与乱针绣手法独具特色。它把绘画的层次感用针线再现，是中国刺绣技艺的代表流派。","craft":["针法体系丰富，讲究平、齐、细、密、匀、顺、和、光","劈丝极细，可将一根丝线劈成几十份，用于表现渐变","双面绣要求正反两面图案一致且不露针脚"],"culture":["苏绣与吴地文人画传统相生，体现以针代笔的文人审美","讲究雅致含蓄，与江南生活方式相互塑造","是女性技艺与家族传承的重要载体"],"today":["苏绣与当代艺术、时装、数字绘画结合，题材不断更新","镇湖绣娘群体推动技艺走向品牌化与国际化"],"writing":["用一根线劈成六十四份突出精细度","讲绣娘眼神与时间的成本，用细节打动受众","把绣与画对照，突出技艺的转换难度"],"values":["文明","敬业"],"scenes":["校园新媒体运营","非遗进校园","老字号品牌推广"],"taboos":["不要把机器绣品宣传为手工苏绣","使用者图像与作品需写明出处"]},{"id":"ich-miaoxiu","name":"苗绣","aliases":["苗族刺绣","破线绣","锦鸡舞苗绣"],"category":"传统美术","level":"国家级非物质文化遗产代表性项目","year":2006,"region":"贵州黔东南、黔南等地苗族聚居区","keywords":["苗绣","破线绣","蝴蝶妈妈","苗服","无字史书","银饰"],"summary":"苗绣是苗族女性世代相传的刺绣技艺，针法繁多，纹样多取材蝴蝶、鸟、龙、花等。苗族有文字遗失的历史，纹样因此承担了记录族群记忆的功能，被称为穿在身上的史书。","craft":["针法体系复杂，破线绣需将丝线剖开再绣，成品细腻如画","纹样遵循本民族的造型逻辑，讲究对称与饱满","一幅盛装绣片常需数年完成，随人生礼俗逐步积累"],"culture":["纹样承载迁徙记忆与族群观念，是口传之外的第二套记忆系统","母亲为女儿绣嫁衣，是技艺与情感的双重传递","体现人与自然共生、与祖辈相连的世界观"],"today":["苗绣被引入现代服装设计与文创产品，助力乡村振兴","绣娘们通过合作社与直播让手艺变现"],"writing":["用穿在身上的史书切入，知识感与情感兼具","强调刺绣是母亲写给女儿的日记，非常打动人","结合乡村振兴与女性就业，讲清当代价值"],"values":["文明","敬业","友善"],"scenes":["非遗进校园","文化志愿服务","校园新媒体运营"],"taboos":["避免猎奇化、异域化描述民族服饰","涉及民族称谓与习俗表述须规范尊重"]},{"id":"ich-huasixiangqian","name":"花丝镶嵌制作技艺","aliases":["花丝镶嵌","细金工艺","金银细工"],"category":"传统技艺","level":"国家级非物质文化遗产代表性项目","year":2008,"region":"北京、河北大厂等地","keywords":["花丝镶嵌","细金工艺","掐丝","累丝","金银错","皇家工艺"],"summary":"花丝镶嵌以金银为材，经掐、填、攒、焊、堆、垒、织、编等技法做成繁复纹样，再镶嵌宝石。它被誉为燕京八绝之一，是中国传统金属工艺中极具代表性的门类。","craft":["掐丝、累丝是核心，丝料细如发丝，全靠手工盘绕成形","焊接温度控制极难，稍有偏差整件作品损坏","镶嵌需与金丝结构精准咬合，不留缝隙"],"culture":["融合多民族与外来工艺，体现中华工艺的兼容并蓄","传统上服务于礼制与服饰仪轨，是等级与审美的物化","考验匠人极致的耐心与手眼稳定"],"today":["花丝镶嵌进入高级珠宝与文创首饰领域，受到年轻人关注","国潮首饰设计把花丝工艺与轻量化需求结合"],"writing":["用发丝一样的金线形容工艺精细度","把工匠的耐心作为情感支点，避免只炫耀昂贵","结合国潮珠宝现象，讲传统工艺的当代出路"],"values":["文明","敬业","富强"],"scenes":["校园新媒体运营","老字号品牌推广"],"taboos":["不要将工艺价值等同于贵金属价格","不得虚构传承人履历与荣誉称号"]},{"id":"ich-longquanjian","name":"龙泉宝剑锻制技艺","aliases":["龙泉宝剑","剑池","百炼钢"],"category":"传统技艺","level":"国家级非物质文化遗产代表性项目","year":2006,"region":"浙江龙泉","keywords":["龙泉宝剑","锻制","淬火","百炼钢","剑池","欧冶子"],"summary":"龙泉宝剑锻制技艺以折叠锻打、淬火、磨砺、装具等工序著称，剑身坚韧锋利、寒光凛然。它承载了中国人对剑的文化想象，也体现了传统金属加工的高超水平。","craft":["反复折叠锻打去除杂质，形成繁复花纹钢","淬火依靠水温与时间的经验判断，决定剑身硬度与韧性","剑鞘、剑柄装具与剑身工艺相互配合"],"culture":["剑在中国文化中象征正直与勇气，与尚武崇德相关","欧冶子铸剑传说为技艺注入深厚的文化叙事","体现百炼成钢的坚韧精神，与奋斗价值相通"],"today":["龙泉宝剑成为地方文化名片，进入博物馆与文创市场","传统锻打工艺与现代材料研究相互借力"],"writing":["把百炼成钢用作品牌精神与励志表达的载体","用一次淬火定成败描述工艺的关键瞬间","避免把宝剑与暴力、武力崇拜关联"],"values":["敬业","爱国"],"scenes":["老字号品牌推广","校园新媒体运营"],"taboos":["不得宣传锋利度以吸引武力联想","涉及刀具管理法规，宣传需合规"]},{"id":"ich-zhenjiu","name":"中医针灸","aliases":["针灸","针法","灸法","经络"],"category":"传统医药","level":"人类非物质文化遗产代表作名录","year":2010,"region":"全国","keywords":["针灸","经络","穴位","艾灸","中医","铜人"],"summary":"针灸包括针法与灸法，以经络腧穴理论为基础，通过刺激体表特定部位调节身体机能。它是中医体系中最具国际影响力的疗法之一。","craft":["针灸铜人与经络图是传统教学的核心教具","进针讲究手法与角度，灸法讲究火力与时间的把握","辨证施治，因人因病调整穴位配伍"],"culture":["体现中医整体观念与治未病思想","经络学说反映中国人对身体的系统性理解","已在世界多地获得应用，成为文明互鉴的载体"],"today":["针灸在世界多国获得法律与行业认可","年轻人对艾灸、中医养生关注度提升"],"writing":["讲清针灸是传统医学而非玄学，用文化角度切入","把经络图当作中国式人体地图来介绍","严禁涉及疗效承诺，宣传须合规"],"values":["文明","和谐"],"scenes":["非遗进校园","校园文化宣传"],"taboos":["严禁宣传治疗效果、包治百病","不得替代就医建议，须提示以正规医疗机构为准"]},{"id":"ich-taiji","name":"太极拳","aliases":["太极拳","太极","陈氏太极拳","杨氏太极拳"],"category":"传统体育、游艺与杂技","level":"人类非物质文化遗产代表作名录","year":2020,"region":"河南温县陈家沟、河北永年等地为主要发源地","keywords":["太极拳","太极","陈家沟","以柔克刚","阴阳","缠丝劲"],"summary":"太极拳以阴阳学说为理论基础，讲究以柔克刚、以静制动，动作圆缓连贯、内外兼修。它既是武术，也是广为流行的健身方式，2020年列入人类非遗名录。","craft":["讲究松、静、圆、缓，以缠丝劲贯穿动作","套路包含掤捋挤按等技法，强调用意不用力","训练包含站桩、推手、套路，注重身心协调"],"culture":["以阴阳平衡为核心观念，体现中国哲学的生活化","把修身与为人处世统一，讲究中正平和","是全民健身与老年健康的常见形式"],"today":["校园太极拳课间操、社团活动广泛开展","太极拳成为国际交流中辨识度很高的中国文化符号"],"writing":["用慢下来也能赢的对比讲清太极智慧","强调它既是武术也是哲学，适合做知识科普","避免把太极拳与养生奇效绑定宣传"],"values":["和谐","文明","友善"],"scenes":["非遗进校园","校园文化宣传","校园新媒体运营"],"taboos":["不得宣传治病功效","避免玄学化、神话化太极拳"]},{"id":"ich-chayun","name":"中国传统制茶技艺及其相关习俗","aliases":["制茶技艺","茶文化","茶俗","点茶"],"category":"传统技艺","level":"人类非物质文化遗产代表作名录","year":2022,"region":"全国多个产茶省区，涉及绿茶、红茶、青茶、黑茶、黄茶、白茶等","keywords":["制茶","茶文化","杀青","揉捻","发酵","工夫茶","围炉煮茶","点茶"],"summary":"中国传统制茶技艺及其相关习俗涵盖绿茶、黄茶、黑茶、白茶、青茶、红茶六大茶类的制作技艺，以及饮茶、茶礼、茶俗等相关实践，是人与自然长期互动的成果。","craft":["六大茶类以发酵程度与工艺路径区分，杀青、揉捻、渥堆、窨制各有讲究","制茶依赖时令与手感，采、摊、炒、揉环环相扣","工夫茶讲究水质、水温、器具与冲泡节奏"],"culture":["以茶待客体现中国人的待人之道与礼仪观念","茶与诗、书、画、禅相互渗透，构成独特的生活美学","茶叶沿古商路传播，是文明交流互鉴的重要载体"],"today":["新式茶饮与围炉煮茶让传统茶事重回青年生活","茶文旅与非遗工坊带动产区经济发展"],"writing":["用一片叶子走过四季讲清六大茶类差异","把以茶待客的礼数作为情感切口","避免把茶与减肥、保健功效直接绑定宣传"],"values":["和谐","文明","友善"],"scenes":["校园新媒体运营","老字号品牌推广","非遗进校园"],"taboos":["不得宣传保健或治疗功效","茶叶地名与品类名称须准确对应"]},{"id":"ich-mubanshuiyin","name":"木版水印技艺","aliases":["木版水印","饾版","拱花","十竹斋"],"category":"传统技艺","level":"国家级非物质文化遗产代表性项目","year":2006,"region":"北京荣宝斋、浙江杭州十竹斋等地","keywords":["木版水印","饾版","拱花","十竹斋","复制画","勾描","印刷"],"summary":"木版水印用勾描、刻版、印刷三道主要工序，以多块木版分色套印，可逼真复制书画作品，达到下真迹一等的效果。它是中国传统印刷术中最精细的分支之一。","craft":["勾描要求精准传达原作的笔意与墨色层次","分色刻版极细，一幅作品可刻数十块版","印刷需掌握水分与压力，凭经验再现墨韵"],"culture":["体现中国人复制与传播艺术作品的智慧","让珍贵书画得以走入寻常人家，是文化普及的技术支撑","体现精益求精的匠人标准"],"today":["木版水印仍是书画复制与非遗展示的重要方式","印刷体验项目成为美术馆与校园活动的热门内容"],"writing":["用能骗过眼睛的印刷术做吸引力开头","把分色套印讲成分层上色，便于理解","强调它不是复印，每一步都靠手作"],"values":["文明","敬业"],"scenes":["非遗进校园","文化志愿服务","校园文化宣传"],"taboos":["不要与机器复印混为一谈","复制作品的使用须遵守著作权规定"]},{"id":"ich-lanyinhua","name":"南通蓝印花布印染技艺","aliases":["蓝印花布","蓝染","药斑布","刮浆"],"category":"传统技艺","level":"国家级非物质文化遗产代表性项目","year":2006,"region":"江苏南通","keywords":["蓝印花布","蓝染","蓼蓝","刮浆","防染","印花布","手工印染"],"summary":"南通蓝印花布以大豆粉与石灰调成的防染浆刮印在土布上，再用蓼蓝染料浸染，形成蓝白分明的花纹。它是最具代表性的民间印染技艺之一。","craft":["刻版、刮浆、浸染、刮灰、漂洗构成完整工序","防染浆的配比与刮印力度决定花纹清晰度","多次浸染与氧化叠加出深浅不一的蓝色层次"],"culture":["蓝白配色朴素纯净，体现民间生活的审美趣味","纹样多取吉祥花草，常见于被面、包袱布等日用品","体现就地取材、自然染色的可持续智慧"],"today":["蓝印花布被应用于服装、家居与文创设计","植物染体验成为校园与社区活动的热门课程"],"writing":["用一抹蓝讲清自然染色的时间感","强调防染工艺的原理，知识性强且易理解","结合可持续时尚话题，贴近青年关注点"],"values":["文明","和谐","敬业"],"scenes":["非遗进校园","校园新媒体运营","文化志愿服务"],"taboos":["不要把化学染布宣传成手工蓝印花布","涉及天然染料功效不作夸大"]},{"id":"ich-zhuanke","name":"中国篆刻","aliases":["篆刻","印章","印信","金石"],"category":"传统美术","level":"人类非物质文化遗产代表作名录","year":2009,"region":"全国，以浙江、江苏、上海、北京等地为重要传承区","keywords":["篆刻","印章","篆书","刀法","印石","边款","金石"],"summary":"篆刻以刀代笔在印石上镌刻篆书，形成印章文字与印面构成的独特艺术。它既是实用凭信，也是文人表达情志的重要形式，与书法、绘画并称。","craft":["讲究篆法、章法、刀法三者统一","冲刀与切刀形成不同线条质感，需长期练习掌握力度","边款以刀刻字，是篆刻家表达创作意图的空间"],"culture":["印章自先秦以来即为凭信之物，承载诚信观念","文人篆刻把方寸之地变为抒情场域，体现小中见大的审美","是汉字造型艺术的浓缩形态"],"today":["篆刻社团与印章设计进入校园，成为文创热门元素","数字印章、电子印章与篆刻审美结合产生新形态"],"writing":["用方寸之间见乾坤点明篆刻的空间美学","强调刀与石的碰撞感，适合做短视频的听觉元素","把印章与诚信观念联系，价值落点自然"],"values":["诚信","文明","敬业"],"scenes":["非遗进校园","校园新媒体运营","校园文化宣传"],"taboos":["不得虚构篆刻家师承与头衔","涉及金石拓片引用须注明出处"]},{"id":"ich-li","name":"黎族传统纺染织绣技艺","aliases":["黎锦","黎族织锦","絣染"],"category":"传统技艺","level":"人类非物质文化遗产代表作名录","year":2009,"region":"海南黎族聚居区","keywords":["黎锦","黎族","纺染织绣","絣染","踞织机","海南"],"summary":"黎族传统纺染织绣技艺包含纺纱、染色、织造、刺绣的完整体系，以絣染和双面绣著称，黎锦纹样记录了黎族的历史与信仰，被称为海南的文化名片。","craft":["使用腰机踞织，靠身体张力控制经线平整","絣染先扎结经线再染色，形成自然晕染的纹样","纹样分人形纹、动物纹、几何纹，各有寓意"],"culture":["黎锦纹样是黎族历史记忆的图像载体","织锦技艺多由女性传承，是族群身份的重要标志","体现热带岛屿环境中的材料智慧"],"today":["黎锦走上国际时装周与设计展，获得更广关注","合作社与研学带动当地妇女就业与文化传播"],"writing":["用把历史织进布里的记忆点切入","讲絣染先绑后染的反直觉过程，知识感强","结合国际秀场与乡村振兴，突出当代价值"],"values":["文明","友善","敬业"],"scenes":["非遗进校园","文化志愿服务","校园文化宣传"],"taboos":["避免对少数民族文化作猎奇化描述","民族称谓与习俗表述须规范尊重"]},{"id":"ich-shoushan","name":"福建木偶戏后继人才培养计划","aliases":["福建木偶戏","泉州提线木偶","掌中木偶"],"category":"传统戏剧","level":"人类非物质文化遗产优秀实践名册","year":2012,"region":"福建泉州、漳州等地","keywords":["木偶戏","提线木偶","掌中木偶","傀儡戏","泉州","偶人"],"summary":"福建木偶戏包括提线木偶与掌中木偶等形式，偶人造型精致、操偶技法高超，其人才培养计划入选人类非遗优秀实践名册，是传承机制获得国际认可的案例。","craft":["提线木偶可提线数十条，靠手指分工实现细腻动作","掌中木偶以手掌与指法塑造角色，讲究手上有戏","偶人制作包含雕刻、彩绘、装线等多个环节"],"culture":["偶戏以小舞台演大世界，体现中国民间戏剧的想象力","人才梯队建设被国际认可，展现活态传承的中国方案","承载闽南地区的语言与民俗记忆"],"today":["木偶戏进校园与剧场演出结合，吸引家庭观众","偶人制作与动画结合，探索新的表达媒介"],"writing":["用几十根线操控一个人物的不可能感抓注意","把培养计划作为活态传承的范例来讲，有说服力","结合亲子与研学场景，扩展受众"],"values":["文明","敬业"],"scenes":["非遗进校园","校园新媒体运营"],"taboos":["不要把木偶戏等同于儿童游戏","技艺描述须准确，避免混淆提线与掌中木偶"]}]},"brands":{"version":"1.0.0","note":"中华老字号品牌知识库。创立年份、创始人、技艺沿革等依据公开通识资料整理，用于教学与文化宣传演示；正式对外发布前请以品牌官方资料及商务部中华老字号名录为准。","items":[{"id":"lzh-tongrentang","name":"同仁堂","aliases":["北京同仁堂"],"founded":1669,"foundedLabel":"清康熙八年（1669年）","founder":"乐显扬","origin":"北京","industry":"中医药","keywords":["同仁堂","中药","炮制","古训","乐显扬","丸散膏丹","老药铺"],"summary":"同仁堂由乐显扬创立于清康熙八年（1669年），是中医药领域最具代表性的中华老字号。三百五十余年间，它以炮制虽繁必不敢省人工、品味虽贵必不敢减物力的古训立身，把仁德与诚信做成了品牌最硬的资产。","story":["乐显扬以医药为业，取同仁二字立堂号，寓意同修仁德、济世养生","自康熙年间起供奉御药，品质要求极严，形成选料必求地道、炮制必求如法的规矩","三百五十余年不改堂号与主业，是中国最知名的中药老字号之一"],"craft":["炮制虽繁必不敢省人工，品味虽贵必不敢减物力，是刻进企业血脉的古训","药材讲究地道产地，选料环节淘汰率高","丸散膏丹与手工炮制技艺长期沿用，工序细分成体系"],"culture":["仁德与诚信是品牌的第一资产，与诚信、敬业的价值观直接呼应","中药文化是中华优秀传统文化中与日常生活最贴近的部分","体现中国传统商业伦理中修合无人见、存心有天知的自我约束"],"today":["在保持中成药主业的同时拓展大健康与国际化业务","以中医药文化体验与科普活动拉近与年轻人的距离"],"writing":["直接引用那句古训最有说服力，不必再多加修饰","把无人见时的自律作为诚信主题的落点","避免使用疗效承诺类表述，宣传须符合广告与药品管理要求"],"values":["诚信","敬业","文明"],"scenes":["老字号品牌推广","校园文化宣传","校园新媒体运营"],"taboos":["严禁宣传药品疗效或包治百病","不得虚构历史年份与创始人信息"]},{"id":"lzh-bianyifang","name":"便宜坊","aliases":["便宜坊烤鸭","焖炉烤鸭"],"founded":1416,"foundedLabel":"明永乐十四年（1416年）","founder":"记载不详","origin":"北京","industry":"餐饮","keywords":["便宜坊","焖炉烤鸭","烤鸭","老字号饭庄","北京菜"],"summary":"便宜坊创立于明永乐十四年（1416年），是北京有明确记载的最早烤鸭老字号之一。它以焖炉技法立足，鸭不见明火、靠炉温焖烤，堂号取方便宜人、宜室宜家之意，六百年字号延续至今。","story":["创立于明代永乐年间，是北京有明确记载的最早烤鸭老字号之一","以焖炉技法立足，鸭不见明火，靠炉温焖烤而成","堂号取方便宜人、宜室宜家之意，六百年字号延续至今"],"craft":["焖炉烤制不见明火，鸭皮酥脆、肉质细嫩，对炉温掌控要求极高","选鸭讲究体态均匀，填养与晾坯环节影响成品质地","与挂炉技法形成两派对照，各有讲究"],"culture":["一只烤鸭里藏着北京的饮食礼俗与待客之道","明代延续至今的堂号印证了中国餐饮业的商业信誉传统","片鸭、卷饼、蘸酱的吃法本身就是一种餐桌仪式"],"today":["老字号门店与烤鸭文化体验结合，成为北京文旅打卡内容","在保持传统技法的同时推出轻量化套餐与外卖形式"],"writing":["用六百年炉火不熄做时间锚点","讲焖炉与挂炉的区别，知识性强又能引发讨论","配上片鸭片数、炉温区间等具体数字，真实可感"],"values":["诚信","敬业","文明"],"scenes":["老字号品牌推广","校园新媒体运营"],"taboos":["不要与其他老字号品牌作攀比式贬低","历史年份须与公开记载一致"]},{"id":"lzh-quanjude","name":"全聚德","aliases":["全聚德烤鸭","挂炉烤鸭"],"founded":1864,"foundedLabel":"清同治三年（1864年）","founder":"杨全仁","origin":"北京","industry":"餐饮","keywords":["全聚德","挂炉烤鸭","杨全仁","德字匾","北京烤鸭"],"summary":"全聚德由杨全仁创立于清同治三年（1864年），以果木明火挂炉烤制形成鲜明特色。堂号中的德字取聚拢德行之意，一只鸭子要片出上百片，把中式烹饪对火候的依赖表现得淋漓尽致。","story":["杨全仁盘下前门一家干果铺，取名全聚德，全字照应本名，聚德取聚拢德行之意","聘请曾在宫廷供职的厨师引入挂炉技法，奠定出品路线","以果木明火挂炉烤制形成鲜明特色，成为北京烤鸭的代表品牌之一"],"craft":["挂炉以果木为燃料，明火烤制，工序包含开生、烫皮、挂糖色、晾坯、入炉","火候全靠师傅观察鸭身颜色与油脂滴落状态判断","片鸭讲究薄厚均匀，一只鸭可片出上百片"],"culture":["堂号中的德字是全文眼，与诚信经营的价值取向相合","烤鸭宴是中外交流中辨识度极高的中国餐饮符号","体现中式烹饪对火候这一不可量化经验的高度依赖"],"today":["在保持挂炉技艺的同时调整产品结构与门店形态","把片鸭技艺搬到前台做成可视化表演，增强互动感"],"writing":["从堂号里那个德字讲起，比泛泛介绍菜品更有味道","用上百片这个数字建立专业感","避免只写好吃，要把火候与功夫讲出来"],"values":["诚信","敬业"],"scenes":["老字号品牌推广","校园新媒体运营"],"taboos":["不要与其他烤鸭品牌作对比式贬低","史料引用须核实，避免以讹传讹"]},{"id":"lzh-ruifuxiang","name":"瑞蚨祥","aliases":["瑞蚨祥绸布店","八大祥"],"founded":1862,"foundedLabel":"清同治元年（1862年）","founder":"孟传珊","origin":"山东济南创立，后以北京大栅栏为主要经营地","industry":"丝绸布匹","keywords":["瑞蚨祥","绸布","大栅栏","青蚨","丝绸","手工旗袍"],"summary":"瑞蚨祥创立于清同治元年（1862年），以北京大栅栏为主要经营地，是绸布行业八大祥之首。它以货真价实、尺码足量建立口碑，新中国成立后曾参与第一面五星红旗的面料供应，留下一段家国记忆。","story":["堂号取瑞气与青蚨之意，青蚨在传说中能引来钱财，寓生意兴隆","以货真价实、尺码足量在绸布行业建立口碑，与同族字号合称八大祥","新中国成立后参与制作第一面五星红旗的面料供应，留下家国记忆"],"craft":["选料讲究织造密度与手感，进货环节由经验丰富的师傅把关","量体裁衣的成衣制作讲究版型与面料垂坠感的配合","绸布以手感、光泽、缩水率作为品质判断依据"],"culture":["老字号与民族记忆相连，最著名的连接点是国旗面料的往事","量体裁衣体现中式服装对个体身形的尊重","货真价实是传统商业对诚信最朴素的理解"],"today":["手工旗袍与非遗传习带动品牌回归年轻人视野","国潮定制与体验式门店成为新的经营方式"],"writing":["第一面五星红旗的面料故事是天然的爱国主义叙事素材，可用在活动或宣讲中","把一匹布的手感和温度讲出来，用感官细节打动人","结合国潮定制讲老字号如何回应新需求"],"values":["爱国","诚信","文明"],"scenes":["老字号品牌推广","校园文化宣传","团日文化活动"],"taboos":["涉及重大历史事件与文物细节须严格核实","不得虚构史料细节"]},{"id":"lzh-neiliansheng","name":"内联升","aliases":["内联升鞋店","千层底布鞋"],"founded":1853,"foundedLabel":"清咸丰三年（1853年）","founder":"赵廷","origin":"天津武清起家，1853年在北京开设鞋店","industry":"服装鞋帽","keywords":["内联升","千层底","布鞋","履中备载","手工制鞋","朝靴"],"summary":"内联升由赵廷创立于清咸丰三年（1853年），以千层底布鞋闻名。它曾用履中备载记录官员鞋样尺寸，形成早期的客户档案制度，是中华老字号中难得的现代管理雏形。","story":["赵廷曾在制鞋作坊学徒，进京后以朝靴生意立足，堂号取内联升官之意，寓意仕途连升","曾以履中备载记录官员鞋样尺寸，形成早期的客户档案制度，是中国商业档案管理的早期实践","以千层底布鞋闻名，成为中式鞋履的代表品牌"],"craft":["千层底以布层层糊制、纳底上千针，讲究针脚均匀、底厚而不硬","鞋面以手工绷楦定型，鞋型服脚","一双布鞋需经剪裁、糊底、纳底、绱鞋等近百道工序"],"culture":["履中备载体现以客户为中心的服务意识，是老字号中难得的现代管理雏形","布鞋合脚、朴素的特性与中国人的生活态度相合","手工制鞋技艺是非遗与老字号的交叉地带"],"today":["手工布鞋与国潮穿搭结合，重新获得年轻消费者青睐","非遗工坊与手工体验课程进入校园活动"],"writing":["把履中备载讲成一百年前的大数据，反差感强，适合做标题","用上千针这个数字强调售价背后的时间成本","结合国潮穿搭场景，让传统鞋履有时尚感"],"values":["诚信","敬业","文明"],"scenes":["老字号品牌推广","校园新媒体运营","非遗进校园"],"taboos":["不要夸大为古代官方档案机构","工艺工序描述须准确"]},{"id":"lzh-liubiju","name":"六必居","aliases":["六必居酱园","六必居酱菜"],"founded":1530,"foundedLabel":"明嘉靖九年（1530年）","founder":"记载不详","origin":"北京","industry":"副食调味","keywords":["六必居","酱菜","酱园","酱八宝","腌制","老字号"],"summary":"六必居始创于明嘉靖九年（1530年），是北京有据可查的最早酱园之一。它以日晒夜露的天然发酵做成酱八宝等什锦酱菜，把时令蔬菜变成四季常备的北京味道。","story":["始创于明代嘉靖年间，是北京有据可查的最早酱园之一","店名之说有多种版本，流传最广的一种是酿制讲究六事必备","以酱八宝等什锦酱菜闻名，成为北京味道的代表"],"craft":["选料讲究时节与品种，腌制需按季节分批投料","日晒夜露的天然发酵是风味来源，时间无法压缩","酱制、腌制、糖渍等技法各有配方与火候"],"culture":["酱菜是把时令蔬菜变成四季常备的民间智慧","一口酱菜连着老北京早饭的日常场景，烟火气最重","体现中国人对发酵食物的深度开发"],"today":["在低盐健康趋势下调整配方，兼顾传统风味与现代需求","酱菜文化展与体验工坊拉近与年轻消费者距离"],"writing":["用一碟酱菜配一碗粥的画面切入，烟火气最容易共鸣","把日晒夜露讲成时间参与的发酵，比讲配方更动人","避免使用最正宗、唯一等绝对化宣传语"],"values":["诚信","敬业"],"scenes":["老字号品牌推广","校园新媒体运营"],"taboos":["不得使用最好吃、最正宗等绝对化用语","食品宣传须符合食品安全与广告法规"]},{"id":"lzh-wangzhihe","name":"王致和","aliases":["王致和腐乳","青方"],"founded":1669,"foundedLabel":"清康熙八年（1669年）","founder":"王致和","origin":"北京","industry":"副食调味","keywords":["王致和","腐乳","青方","臭豆腐","发酵","徽商"],"summary":"王致和由安徽举人王致和创立于清康熙八年（1669年），因一次意外发酵而做出青方腐乳。从落第举人的谋生手艺做成三百余年的产业，是失败中转向的经典案例。","story":["安徽举人王致和进京赶考落第后留京谋生，无意间做出青方腐乳，由误会而成美味","腐乳后进入宫廷膳食，青方之名亦由此流传","从一次经营困境中的意外发现，做成三百余年的产业，是失败中转向的经典案例"],"craft":["豆腐经前期发酵长毛、加盐腌制、后期发酵成酱香，工序环环相扣","菌种、盐度、温度共同决定风味，全凭经验调控","青方以独特气味著称，是发酵深度更高的品类"],"culture":["闻着臭吃着香的辩证感，是中国饮食审美中很特别的一笔","举人落第转而经商的经历，与敬业、自强的价值取向相通","发酵食品体现了中国人对微生物的早期掌握与利用"],"today":["腐乳仍是日常调味的重要角色，也作为北京味道符号被不断讲述","在低盐与健康化方向上持续调整工艺"],"writing":["落第举人意外发明美味的反差故事最有传播力","把闻着臭吃着香写成一条反转线索，适合短视频节奏","不要猎奇化气味，要落到发酵智慧上"],"values":["敬业","诚信"],"scenes":["老字号品牌推广","校园新媒体运营"],"taboos":["不得宣传食品保健功效","历史故事须区分传说与史实"]},{"id":"lzh-zhangxiaoquan","name":"张小泉","aliases":["张小泉剪刀","杭州张小泉"],"founded":1628,"foundedLabel":"明崇祯元年（1628年）","founder":"张小泉","origin":"安徽黟县起家，后迁浙江杭州","industry":"日用五金","keywords":["张小泉","剪刀","嵌钢","锻打","杭州","五金"],"summary":"张小泉创立于明崇祯元年（1628年），后迁至杭州，以嵌钢锻造工艺改良剪刀品质。四百余年专注剪刀一个品类，是中国刀剪行业的标志性品牌，也是工匠精神最贴近日常的样本。","story":["张小泉随父学艺后到杭州开设剪刀铺，以嵌钢工艺改良剪刀品质","剪刀裁衣断布利落不卷刃，很快在杭州立住脚跟","四百余年专注剪刀品类，成为中国刀剪行业的标志性品牌"],"craft":["嵌钢锻造是核心，将钢料嵌入铁中反复锻打，兼顾锋利与韧性","淬火与磨刃全凭手感，一把剪刀需经数十道工序","开合顺滑与剪口咬合是判断质量的关键"],"culture":["一把剪刀对应中国家庭裁衣缝补的日常，是最贴近生活的老字号","专注单一品类数百年，是工匠精神的直观样本","体现中国传统冶铁锻造技艺的民间应用"],"today":["在保持传统锻打技艺的同时拓展厨房刀具与文创产品","非遗工坊与手工磨刀体验吸引年轻消费者参与"],"writing":["用四百年只做一把剪刀做主题句，聚焦感强","把嵌钢讲成刚柔并济，可自然引出价值表达","避免与同行作贬低式比较"],"values":["敬业","诚信","文明"],"scenes":["老字号品牌推广","非遗进校园","校园新媒体运营"],"taboos":["不得使用第一、最好等绝对化用语","刀具宣传须符合相关管理规定"]},{"id":"lzh-huqingyutang","name":"胡庆余堂","aliases":["胡庆余堂国药号","江南药王"],"founded":1874,"foundedLabel":"清同治十三年（1874年）","founder":"胡雪岩","origin":"浙江杭州","industry":"中医药","keywords":["胡庆余堂","胡雪岩","戒欺","中药","江南药王","戒欺匾"],"summary":"胡庆余堂由胡雪岩创立于清同治十三年（1874年），有江南药王之誉。它把戒欺二字悬于厅堂、面向顾客公开承诺不欺不骗，是中国商业伦理史上极具代表性的自我约束。","story":["胡雪岩创办药号，取庆余之意，悬戒欺匾于厅堂，向顾客公开承诺不欺不骗","以真不二价的经营原则立足，业务遍及江南","有江南药王之誉，戒欺二字成为百年品牌的精神核心"],"craft":["药材采购讲究地道与品质，验收环节标准严格","丸散膏丹等传统剂型的炮制工艺长期沿用","药号内部以戒欺为准绳管理采购与生产"],"culture":["戒欺匾是中国商业伦理史上极具代表性的自我约束，直接对应诚信价值","药号建筑与经营格局被完整保留，是中医药文化的活化石","体现工商与公益结合的传统商人理想"],"today":["老药号与博物馆、研学结合，成为杭州文化地标","在中医药文化传播中承担对外展示职能"],"writing":["戒欺两个字本身就是故事，不必绕弯","把匾额面向顾客这一细节讲出来，画面感很强","用于诚信主题宣讲或团日活动时，落脚点清晰"],"values":["诚信","敬业","文明"],"scenes":["老字号品牌推广","校园文化宣传","团日文化活动"],"taboos":["严禁宣传药品疗效","不得虚构匾额与史实细节"]},{"id":"lzh-daoxiangcun","name":"稻香村","aliases":["北京稻香村","南味食品"],"founded":1773,"foundedLabel":"清乾隆三十八年（1773年）","founder":"记载不详","origin":"江苏苏州创立，后在北京设店","industry":"食品糕点","keywords":["稻香村","苏式糕点","京式糕点","月饼","点心","南味"],"summary":"稻香村创立于清乾隆三十八年（1773年），苏州起家后进京，把南味与北京口味融合在一起。它以糕点伴随节令与人生礼俗，节气礼盒与年节点心至今仍是北京人的味觉记忆。","story":["苏州起家，以稻香二字取田园风雅之意，主打南味糕点","进京后把南味与北京口味结合，形成京式与苏式兼容的产品结构","以糕点伴随节令与人生礼俗，成为北京人年节记忆的一部分"],"craft":["酥皮类点心讲究起酥层次，油酥比例与手法决定口感","节令产品按节气与节日分批上市，制作节奏随年历走","枣泥、山楂、豆沙等馅料需自熬，讲究火候与湿度"],"culture":["点心是中国人过节的仪式感载体，与二十四节气、传统节日紧密相连","南味进京的融合史，是饮食文化跨地域交流的样本","以礼盒传情，承载中国人的人情往来"],"today":["节气礼盒与国潮包装让老点心重回年轻人购物车","与非遗技艺联名的产品把糕点做成文化载体"],"writing":["从中秋的一块点心讲到年节的枣糕，用节令串起品牌","把糕点与二十四节气结合，天然适合做系列内容","避免使用最正宗等绝对化用语"],"values":["文明","诚信","和谐"],"scenes":["老字号品牌推广","非遗进校园","校园新媒体运营"],"taboos":["不得作绝对化宣传用语","食品宣传须符合食品安全法规"]},{"id":"lzh-laofengxiang","name":"老凤祥","aliases":["老凤祥银楼","凤祥"],"founded":1848,"foundedLabel":"清道光二十八年（1848年）","founder":"费汝明","origin":"上海","industry":"珠宝首饰","keywords":["老凤祥","银楼","金银细工","首饰","上海","凤纹"],"summary":"老凤祥由费汝明创立于清道光二十八年（1848年），以金银饰品与细金工艺立足上海。它把如意、缠枝、凤纹等吉祥纹样做成日常配饰，工艺上与花丝镶嵌等国家级非遗技艺同源。","story":["费汝明在上海开设银楼，取凤祥之意寄托吉祥祝愿","以金银饰品与细金工艺立足，成为上海近代重要的银楼","一百七十余年专注珠宝首饰，是传统金银工艺的商业代表"],"craft":["金银细工技艺为核心，包含錾刻、累丝、镶嵌等手法","首饰设计讲究纹样寓意，如意、缠枝、凤纹为常见母题","从手工打制到现代工艺，传统技法在高端定制中保留"],"culture":["首饰承载中国人对美好生活的期许与人生礼俗记忆","凤纹等吉祥纹样是中华吉祥文化的直观表达","与花丝镶嵌等国家级非遗技艺同源"],"today":["国潮设计与非遗联名让传统纹样进入年轻人的日常配饰","工艺大师工作室成为非遗展示与传习的窗口"],"writing":["把首饰讲成情感的存储介质，避免只讲材质价格","解读一个纹样的寓意，比罗列工艺名词更有用","不得暗示保值增值或投资回报"],"values":["文明","诚信","敬业"],"scenes":["老字号品牌推广","校园新媒体运营"],"taboos":["不得暗示投资保值收益","不得虚构大师头衔与荣誉"]},{"id":"lzh-wanglaoji","name":"王老吉","aliases":["王老吉凉茶","凉茶"],"founded":1828,"foundedLabel":"清道光八年（1828年）","founder":"王泽邦","origin":"广东广州","industry":"饮料食品","keywords":["王老吉","凉茶","王泽邦","岭南","草本","老字号"],"summary":"王老吉由王泽邦创立于清道光八年（1828年），是岭南凉茶的代表品牌。凉茶配制技艺已被列入国家级非遗代表性项目，一碗凉茶里既有本草配伍的经验，也有南方街巷的日常记忆。","story":["王泽邦在广东创制凉茶配方并以王老吉为号经营","凉茶随岭南人下南洋与外出务工而传播，成为华人共同的味觉记忆","从街边凉茶铺发展为全国性品牌，是岭南饮食文化的代表之一"],"craft":["以多种草本植物配伍熬制，讲究配比与火候","传统凉茶现场熬煮，风味与温度相关","凉茶配制技艺已被列入国家级非遗代表性项目"],"culture":["凉茶体现岭南地区因地制宜的饮食习惯与生活智慧","一碗凉茶藏着南方街巷的日常记忆与他人关怀","是饮食类非遗与老字号品牌的交汇点"],"today":["国潮包装与新口味让老品牌重回年轻消费场景","凉茶文化体验与非遗展示结合，强化文化属性"],"writing":["从街边凉茶铺的场景讲起，烟火气最有效","把配方与火候讲成技艺，避免涉及功效宣传","严禁宣传防治疾病等功效表述"],"values":["文明","友善","诚信"],"scenes":["老字号品牌推广","校园新媒体运营","非遗进校园"],"taboos":["严禁宣传保健或治疗功效","不得暗示药品替代作用"]},{"id":"lzh-zhangyu","name":"张裕","aliases":["张裕葡萄酿酒","张裕公司"],"founded":1892,"foundedLabel":"清光绪十八年（1892年）","founder":"张弼士","origin":"山东烟台","industry":"食品饮料","keywords":["张裕","葡萄酒","张弼士","烟台","实业","工业化"],"summary":"张裕由南洋华侨张弼士创立于清光绪十八年（1892年），是中国近代工业化葡萄酒生产的开端。它从欧洲引进品种与技术，同时培养本土人才，以实业兴邦为初衷，是民族工业自觉的典型样本。","story":["南洋华侨张弼士在烟台创办葡萄酿酒公司，是中国近代工业化葡萄酒生产的开端","从欧洲引进葡萄品种与酿酒技术，聘请外籍技师，同时培养本土人才","以实业兴邦为初衷，把民族工业与地方产业结合起来"],"craft":["酿酒讲究葡萄品种、风土与窖藏时间的配合","橡木桶陈酿影响风味结构，需长期管理","从种植到酿造形成完整产业链"],"culture":["华侨归国创办实业，是爱国精神与民族工业自觉的典型样本","体现近代中国主动学习外来技术并本土化的过程","葡萄酒文化在中国经历了从舶来品到本土风土表达的过程"],"today":["中国葡萄酒产区与本土风土表达受到更多关注","工业遗产与酒文化博物馆成为文旅与研学资源"],"writing":["把实业兴邦的初衷讲清楚，爱国落点自然形成","强调引进之后的学习与本土化，避免简单崇洋或排外","未成年人相关宣传须规避饮酒诱导"],"values":["爱国","富强","敬业"],"scenes":["老字号品牌推广","校园文化宣传","团日文化活动"],"taboos":["不得面向未成年人进行饮酒宣传","不得宣传饮酒有益健康"]},{"id":"lzh-rongbaozhai","name":"荣宝斋","aliases":["荣宝斋木版水印","松竹斋"],"founded":1672,"foundedLabel":"清康熙十一年（1672年）","founder":"记载不详","origin":"北京","industry":"文化艺术","keywords":["荣宝斋","木版水印","书画","装裱","文房","松竹斋"],"summary":"荣宝斋前身松竹斋创立于清康熙十一年（1672年），以书画经营、装裱修复与木版水印三项技艺立身。其木版水印可复制历代书画，达到下真迹一等的水平，是文化传承的幕后力量。","story":["前身松竹斋为经营文房用品的南纸店，后更名为荣宝斋","以书画经营、装裱修复与木版水印三项技艺立身","木版水印可复制历代书画，达到下真迹一等的水平"],"craft":["木版水印经勾描、刻版、印刷三道工序，分色套印","装裱修复讲究补全、托心、镶覆等环节，须与原作风格一致","文房用品的选材与制作同样讲究"],"culture":["以技艺守护书画的流传，是文化传承的幕后力量","装裱修复使破损古画得以延续，体现对文明的敬畏","文人书斋文化的物质支撑者"],"today":["木版水印作品仍用于文化交流与艺术普及","非遗体验活动让公众了解传统印刷与装裱"],"writing":["把下真迹一等这句话本身作为传播点","讲修补一幅古画需要多久，用时间建立敬意","涉及书画作品须注意著作权与图像授权"],"values":["文明","敬业","诚信"],"scenes":["老字号品牌推广","非遗进校园","文化志愿服务"],"taboos":["不得虚构馆藏与历史细节","使用书画图像须遵守著作权规定"]},{"id":"lzh-baiqueling","name":"百雀羚","aliases":["百雀羚冷霜","百雀羚草本"],"founded":1931,"foundedLabel":"民国二十年（1931年）","founder":"顾植民","origin":"上海","industry":"日用化学","keywords":["百雀羚","冷霜","国货","上海制造","护肤","老国货"],"summary":"百雀羚由顾植民创立于1931年，以蓝铁盒冷霜成为几代人的共同记忆。它是近代国货化妆品工业的代表品牌，近年以东方美学的国潮设计重回年轻消费者视野，是老字号焕新的典型案例。","story":["顾植民在上海创办化妆品企业，以蓝铁盒冷霜成为几代人的记忆","是近代国货化妆品工业的代表品牌之一，与上海制造的时代背景紧密相连","近年来以国潮设计与文化叙事重回大众视野，成为老字号焕新的典型案例"],"craft":["冷霜类产品的配方讲究油相与水相比例的稳定","包装设计从铁盒到当代视觉，体现审美变迁","品牌在传承经典产品的同时进行配方现代化"],"culture":["蓝铁盒是一代人的集体记忆，情感价值高于功能描述","国货品牌的兴衰与民族工业发展历程相互映照","老字号焕新是老品牌与青年审美对话的样本"],"today":["以东方美学为设计语言的国潮系列吸引了年轻消费者","经典产品的复刻与联名成为品牌文化传播抓手"],"writing":["用一个蓝铁盒唤起共同记忆，情感切口最有效","把焕新讲成东方审美的重新发现，而非简单复古","化妆品宣传须符合广告法规，不得夸大功效"],"values":["文明","富强","敬业"],"scenes":["老字号品牌推广","校园新媒体运营"],"taboos":["不得宣称美白、抗衰等具体功效","不得使用医疗术语宣传化妆品"]},{"id":"lzh-goubuli","name":"狗不理","aliases":["狗不理包子","天津包子"],"founded":1858,"foundedLabel":"清咸丰八年（1858年）","founder":"高贵友","origin":"天津","industry":"餐饮","keywords":["狗不理","包子","天津三绝","高贵友","面食"],"summary":"狗不理由高贵友创立于清咸丰八年（1858年），因生意繁忙顾不上与顾客搭话而被戏称狗不理，名号由此而来。它与十八街麻花、耳朵眼炸糕并称天津三绝，是天津饮食文化的代表。","story":["高贵友乳名狗子，因生意繁忙顾不上与顾客搭话，被戏称狗不理，名号由此而来","以皮薄馅大、褶花均匀的包子工艺在天津立足","与十八街麻花、耳朵眼炸糕并称天津三绝，是天津饮食文化的代表"],"craft":["和面讲究水温与醒发时间，皮薄而筋道","馅料调制讲打水上劲，肉馅需顺一个方向搅拌","每只包子的褶花数量稳定，是手工标准化的直观体现"],"culture":["一个诙谐的绰号变成金字招牌，体现民间语言的生命力","早餐铺子是中国城市生活最有烟火气的场景","手工标准化体现中国面食技艺对稳定品质的追求"],"today":["在调整经营策略的同时保留传统包子工艺","与天津城市文旅结合，成为地方文化符号"],"writing":["先讲绰号怎么来的，故事性天然强","用褶花数量这个细节建立专业感","避免使用最正宗等绝对化用语"],"values":["诚信","敬业"],"scenes":["老字号品牌推广","校园新媒体运营"],"taboos":["不得使用绝对化宣传用语","不得贬低同类品牌"]}]},"spirits":{"version":"1.0.0","note":"革命文化与社会主义先进文化素材库。精神内涵表述参照权威发布口径整理，用于宣传教育与校园文化内容创作；正式发布前请以党中央及有关部门公开发布的权威表述为准。","items":[{"id":"spirit-jiandang","name":"伟大建党精神","type":"革命文化","period":"1921年中国共产党成立以来","keywords":["建党精神","红船精神","南湖红船","中共一大","开天辟地","初心使命"],"core":["坚持真理、坚守理想","践行初心、担当使命","不怕牺牲、英勇斗争","对党忠诚、不负人民"],"story":["1921年7月，中共一大在上海召开，后转移到浙江嘉兴南湖的一条游船上继续举行并闭幕","这条游船被称为红船，成为中国共产党诞生地的象征","从五十多名党员到如今的百年大党，起点是一间石库门和一艘小船"],"today":["南湖革命纪念馆与中共一大纪念馆是重要红色教育场所","开天辟地、敢为人先的首创精神常用于青年创新创业教育"],"writing":["用一艘小船与百年大党的对比做叙事主线，画面感强","把首创精神落到青年当下的选择上，避免只讲历史","涉及党史细节须严格依据权威表述"],"values":["爱国","敬业","文明"],"scenes":["团日文化活动","校园文化宣传","校园新媒体运营"],"taboos":["严禁戏说、调侃党史与领导人形象","不得偏离权威表述自行解读"]},{"id":"spirit-jinggangshan","name":"井冈山精神","type":"革命文化","period":"1927年至1930年井冈山革命根据地时期","keywords":["井冈山","革命根据地","星星之火","实事求是","依靠群众"],"core":["坚定信念、艰苦奋斗","实事求是、敢闯新路","依靠群众、勇于胜利"],"story":["秋收起义受挫后，革命队伍向井冈山进军，创建了第一个农村革命根据地","在极端困难条件下走出一条农村包围城市的道路，是实事求是思想路线的实践源头","红米饭南瓜汤的艰苦生活成为革命乐观主义的经典意象"],"today":["井冈山是重要的红色教育与研学目的地","敢闯新路的精神常用于讲改革开放与创新创业的历史逻辑"],"writing":["用红米饭南瓜汤的细节讲艰苦奋斗，具体可感","把敢闯新路与青年创新创业联系起来，现实感强","讲山的故事要落到人的选择和信念上"],"values":["爱国","敬业"],"scenes":["团日文化活动","校园文化宣传"],"taboos":["不得虚构史实细节","严禁将革命历史娱乐化"]},{"id":"spirit-changzheng","name":"长征精神","type":"革命文化","period":"1934年至1936年红军长征时期","keywords":["长征","遵义会议","雪山草地","四渡赤水","飞夺泸定桥","会师"],"core":["把全国人民和中华民族的根本利益看得高于一切","坚定革命的理想和信念，坚信正义事业必然胜利","为了救国救民，不怕任何艰难险阻，不惜付出一切牺牲","坚持独立自主、实事求是，一切从实际出发","顾全大局、严守纪律、紧密团结","紧紧依靠人民群众，同人民群众生死相依、患难与共"],"story":["1934年10月中央红军出发长征，1935年1月遵义会议确立了毛泽东同志在党中央和红军的领导地位","红军翻越雪山、穿越草地，1935年10月中央红军到达陕北，1936年10月红军三大主力会师，长征胜利结束","长征是宣言书、宣传队、播种机，这一判断成为经典表述"],"today":["重走长征路是高校实践育人与团日活动的常见形式","长征精神常用于讲青年面对困难时的意志品质"],"writing":["用一组地理坐标串起长征路线，信息密度高且直观","把长征讲成一场关于信念的选择，避免堆砌形容词","数字须准确，如出发时间、会师时间、里程等"],"values":["爱国","敬业","富强"],"scenes":["团日文化活动","校园文化宣传","文化志愿服务"],"taboos":["严禁历史虚无主义表述与戏说","不得篡改重大历史事件时间与结论"]},{"id":"spirit-zunyi","name":"遵义会议精神","type":"革命文化","period":"1935年1月遵义会议","keywords":["遵义会议","历史转折","实事求是","独立自主","民主团结"],"core":["坚定信念、实事求是","独立自主、民主团结"],"story":["1935年1月，中共中央政治局在贵州遵义召开扩大会议，事实上确立了毛泽东同志在党中央和红军的领导地位","会议在极端危急的历史关头挽救了党、挽救了红军、挽救了中国革命，是党的历史上一个生死攸关的转折点","会议体现了坚持真理、修正错误的勇气"],"today":["遵义会议会址是重要的红色教育场所","会议精神常用于讲实事求是与自我革命"],"writing":["突出生死攸关的转折点这个关键判断，主线清晰","把坚持真理、修正错误转化为可讨论的组织话题","会议名称、时间、地点须准确"],"values":["爱国","敬业","公正"],"scenes":["团日文化活动","校园文化宣传"],"taboos":["不得简化为个人功过叙事","严禁历史虚无主义解读"]},{"id":"spirit-yanan","name":"延安精神","type":"革命文化","period":"1935年至1948年延安时期","keywords":["延安","宝塔山","南泥湾","整风","为人民服务","自力更生"],"core":["坚定正确的政治方向","解放思想、实事求是的思想路线","全心全意为人民服务的根本宗旨","自力更生、艰苦奋斗的创业精神"],"story":["1935年中央红军到达陕北，延安成为中共中央所在地，共十三年","南泥湾大生产运动把荒无人烟的南泥湾变成陕北好江南，是自力更生的典范","延安整风确立实事求是的思想路线，党的七大在延安召开"],"today":["延安革命纪念馆、宝塔山、杨家岭是经典红色研学线路","南泥湾精神常用于劳动教育与艰苦奋斗主题内容"],"writing":["用陕北好江南这句流传的话带出南泥湾故事","十三年这个时间长度本身就很有分量","把为人民服务与日常小事结合，避免口号化"],"values":["爱国","敬业","友善"],"scenes":["团日文化活动","校园文化宣传","文化志愿服务"],"taboos":["不得戏说革命历史人物","引用历史口号须核对原意"]},{"id":"spirit-kangzhan","name":"伟大抗战精神","type":"革命文化","period":"1931年至1945年抗日战争时期","keywords":["抗战","抗日战争","民族觉醒","天下兴亡","视死如归","百折不挠"],"core":["天下兴亡、匹夫有责的爱国情怀","视死如归、宁死不屈的民族气节","不畏强暴、血战到底的英雄气概","百折不挠、坚忍不拔的必胜信念"],"story":["1931年九一八事变后中国人民奋起抵抗，1937年七七事变标志全民族抗战开始","中国人民抗日战争是世界反法西斯战争的重要组成部分，1945年取得完全胜利","抗战时期形成的精神谱系成为民族精神的重要组成"],"today":["重要纪念日开展的主题教育、祭扫与展览是常见传承形式","抗战题材的纪录片、主题班会与影像资料在校园广泛使用"],"writing":["以天下兴亡、匹夫有责作为价值落点，格局大而具体","尊重史实与民族情感，不使用轻慢或娱乐化表达","涉及伤亡、时间、战役等数据须准确"],"values":["爱国","文明"],"scenes":["团日文化活动","校园文化宣传"],"taboos":["严禁戏谑、恶搞抗战历史与英烈","不得使用侮辱性、歧视性表述"]},{"id":"spirit-xibaipo","name":"西柏坡精神","type":"革命文化","period":"1948年至1949年西柏坡时期","keywords":["西柏坡","两个务必","进京赶考","三大战役","七届二中全会"],"core":["敢于斗争、敢于胜利","谦虚谨慎、艰苦奋斗","为了人民、依靠人民"],"story":["1948年至1949年，中共中央在西柏坡指挥了辽沈、淮海、平津三大战役","1949年3月，党的七届二中全会在这里召开，提出两个务必的重要思想","党中央离开西柏坡前往北平，被形象地称为进京赶考"],"today":["西柏坡纪念馆是重要红色教育场所","进京赶考的比喻常用于讲责任担当与清醒自觉"],"writing":["把进京赶考讲成一场永不停歇的考试，立意好懂","两个务必是核心表述，引用须完整准确","适合做廉洁教育与作风教育内容"],"values":["爱国","敬业","公正"],"scenes":["团日文化活动","校园文化宣传"],"taboos":["政治表述须与权威口径一致","不得断章取义引用历史文献"]},{"id":"spirit-hongyan","name":"红岩精神","type":"革命文化","period":"抗日战争至解放战争时期，主要在重庆","keywords":["红岩","重庆","渣滓洞","白公馆","狱中斗争","江竹筠"],"core":["刚柔相济、锲而不舍的政治智慧","出淤泥而不染、同流而不合污的政治品格","以诚相待、团结多数的宽广胸怀","善处逆境、宁难不苟的英雄气概"],"story":["中共中央南方局在重庆开展统战工作，红岩村是南方局所在地","解放前夕，被关押在渣滓洞、白公馆的革命者在狱中坚持斗争并留下狱中意见","红岩精神成为信仰与气节的象征"],"today":["重庆红岩革命历史博物馆是重要红色教育基地","红岩故事在文学、影视与舞台剧中被不断演绎"],"writing":["从狱中斗争的细节讲信仰的力量，感染力强","文艺作品引用须区分史实与文学创作","对革命者的描写须庄重、尊重"],"values":["爱国","诚信","敬业"],"scenes":["团日文化活动","校园文化宣传","文化志愿服务"],"taboos":["严禁将革命烈士形象娱乐化","不得虚构烈士事迹"]},{"id":"spirit-kangmeiyuanchao","name":"抗美援朝精神","type":"革命文化","period":"1950年至1953年","keywords":["抗美援朝","保家卫国","志愿军","上甘岭","最可爱的人"],"core":["祖国和人民利益高于一切、为了祖国和民族的尊严而奋不顾身的爱国主义精神","英勇顽强、舍生忘死的革命英雄主义精神","不畏艰难困苦、始终保持高昂士气的革命乐观主义精神","为完成祖国和人民赋予的使命、慷慨奉献自己一切的革命忠诚精神","为人类和平与正义事业而奋斗的国际主义精神"],"story":["1950年，中国人民志愿军跨过鸭绿江，抗美援朝、保家卫国","上甘岭战役等战例成为英勇顽强的象征","1953年停战协定签订，这场战争打出了国威军威"],"today":["志愿军烈士遗骸归国仪式成为持续的社会性纪念活动","相关题材影视作品带动青年对这段历史的关注"],"writing":["把最可爱的人这一表述作为情感入口，有历史纵深","讲清保家卫国与和平的关系，避免简单化","涉及战役与伤亡数据须依据权威资料"],"values":["爱国","文明","富强"],"scenes":["团日文化活动","校园文化宣传"],"taboos":["严禁戏谑英雄烈士","不得使用侮辱性称呼"]},{"id":"spirit-liangdanyixing","name":"两弹一星精神","type":"社会主义先进文化","period":"20世纪五六十年代","keywords":["两弹一星","原子弹","氢弹","人造卫星","钱学森","邓稼先","酒泉"],"core":["热爱祖国、无私奉献","自力更生、艰苦奋斗","大力协同、勇于登攀"],"story":["在极端困难的国际环境与物质条件下，中国自主研制成功原子弹、氢弹和人造地球卫星","大批科学家与技术人员隐姓埋名，长期在戈壁荒漠工作","1964年第一颗原子弹爆炸成功，1970年第一颗人造地球卫星发射成功"],"today":["两弹一星精神成为科技自立自强的重要精神资源","相关纪念馆与科学家故居是科学家精神教育的现场课堂"],"writing":["用隐姓埋名二十八年这类时间细节讲奉献，最打动人","把科技自立自强与今天的关键技术攻关联系起来","科学家姓名与事迹须准确，不得张冠李戴"],"values":["爱国","敬业","富强"],"scenes":["团日文化活动","校园文化宣传","校园新媒体运营"],"taboos":["不得虚构科学家事迹","涉密历史细节须以公开资料为准"]},{"id":"spirit-leifeng","name":"雷锋精神","type":"社会主义先进文化","period":"20世纪60年代至今","keywords":["雷锋","学雷锋","志愿服务","螺丝钉","为人民服务","日记"],"core":["热爱党、热爱祖国、热爱社会主义的崇高理想信念","服务人民、助人为乐的奉献精神","干一行爱一行、专一行精一行的敬业精神","锐意进取、自强不息的创新精神","艰苦奋斗、勤俭节约的创业精神"],"story":["雷锋是普通战士，因默默做好事与节俭助人而为人们熟知，牺牲时年仅22岁","他留下的日记记录了对岗位与人民朴素而真诚的态度","1963年，毛泽东同志题词向雷锋同志学习，学雷锋活动延续至今"],"today":["学雷锋志愿服务月、志愿者协会是校园中最常见的落地形式","雷锋精神与志愿服务精神、青年责任感结合紧密"],"writing":["用一颗螺丝钉讲岗位价值，简洁有力","把学雷锋落到具体的志愿服务场景，避免空喊口号","适合与校园志愿活动招募内容结合撰写"],"values":["友善","敬业","文明"],"scenes":["文化志愿服务","校园文化宣传","团日文化活动"],"taboos":["不得把学雷锋做成形式主义宣传","不得虚构雷锋事迹细节"]},{"id":"spirit-jiaoyulu","name":"焦裕禄精神","type":"社会主义先进文化","period":"20世纪60年代","keywords":["焦裕禄","兰考","泡桐","治沙","县委书记的榜样","公仆情怀"],"core":["亲民爱民","艰苦奋斗","科学求实","迎难而上","无私奉献"],"story":["焦裕禄任河南兰考县委书记期间，带领群众治理风沙、内涝、盐碱三害","他带头查风口、探流沙，身患重病仍坚持工作，1964年病逝时年仅42岁","今天的兰考泡桐成林，成为他留下的绿色印记"],"today":["兰考焦裕禄纪念园是重要的党员教育与研学场所","焦裕禄精神常用于作风建设与担当作为主题内容"],"writing":["用一棵泡桐树讲一个人的坚守，意象准确又好记","把科学求实与今天的调查研究联系起来","细节须依据权威公开资料"],"values":["敬业","公正","友善"],"scenes":["团日文化活动","校园文化宣传"],"taboos":["不得虚构事迹细节","避免过度煽情化处理"]},{"id":"spirit-hongqiqu","name":"红旗渠精神","type":"社会主义先进文化","period":"1960年至1969年","keywords":["红旗渠","林县","自力更生","艰苦奋斗","人工天河","太行山"],"core":["自力更生、艰苦创业","团结协作、无私奉献"],"story":["河南林县十年九旱，当地群众在太行山悬崖峭壁上开凿引水工程红旗渠","工程历时近十年，削平山头、凿通隧道，被称为人工天河","在极其有限的条件下依靠集体力量建成，是自力更生的象征"],"today":["红旗渠干部学院与纪念馆成为研学与党性教育重要场所","红旗渠精神常用于讲集体协作与奋斗精神"],"writing":["用十年、一座山、一条渠三个要素讲清工程规模","把团结协作与当下团队项目对照，现实感强","工程数据须准确，不夸大"],"values":["敬业","富强","和谐"],"scenes":["团日文化活动","校园文化宣传"],"taboos":["不得虚构工程数据","避免将历史条件简单美化"]},{"id":"spirit-tequ","name":"特区精神","type":"社会主义先进文化","period":"1980年经济特区设立以来","keywords":["经济特区","深圳","敢闯敢试","改革开放","蛇口","时间就是金钱"],"core":["敢闯敢试、敢为人先的改革精神","开放包容、合作共赢的开放精神","埋头苦干、务实高效的实干精神"],"story":["1980年起深圳、珠海、汕头、厦门设立经济特区","蛇口工业区率先喊出时间就是金钱，效率就是生命，成为改革年代的精神标记","深圳从边陲小镇发展为国际化城市，是改革开放的生动样本"],"today":["深圳改革开放展览馆与莲花山公园是重要教育场所","特区精神常用于讲创新创业与青年奋斗"],"writing":["用一句改革年代的口号带动时代记忆","把敢为人先与青年创新创业项目结合，落地性强","地名与时间须准确"],"values":["富强","敬业","公正"],"scenes":["团日文化活动","校园文化宣传","校园新媒体运营"],"taboos":["不得对改革开放历史作简单化评价","引用口号须准确"]},{"id":"spirit-zairenhangtian","name":"载人航天精神","type":"社会主义先进文化","period":"1992年载人航天工程立项以来","keywords":["载人航天","神舟","空间站","特别能吃苦","航天员","飞天"],"core":["特别能吃苦、特别能战斗","特别能攻关、特别能奉献"],"story":["1992年载人航天工程立项，2003年神舟五号载人飞船成功发射并返回","从一人一天到多人长期驻留，中国空间站建成并稳定运行","工程背后是数以万计的科研人员与航天员的长期付出"],"today":["航天发射直播与空间站课程成为青少年科普热门内容","航天精神常用于讲科技攻关与团队协作"],"writing":["用一次发射背后有多少人讲清系统工程的分量","把特别能攻关与关键核心技术联系起来","任务名称与时间须准确"],"values":["爱国","富强","敬业"],"scenes":["团日文化活动","校园文化宣传","校园新媒体运营"],"taboos":["不得泄露或推测未公开的工程信息","不得虚构任务细节"]},{"id":"spirit-saihanba","name":"塞罕坝精神","type":"社会主义先进文化","period":"1962年建场以来","keywords":["塞罕坝","林场","荒漠变林海","生态","三代人","绿色奇迹"],"core":["牢记使命","艰苦创业","绿色发展"],"story":["河北塞罕坝在20世纪50年代已是风沙肆虐的荒原，1962年组建林场开始造林","三代人接续奋斗，把荒原变成百万亩人工林海","成为世界范围内人工林建设的成功案例"],"today":["塞罕坝成为生态文明教育的重要现场与研学基地","塞罕坝精神与双碳目标、生态环保主题活动结合紧密"],"writing":["用三代人一棵树的时间尺度讲接续奋斗，很有力量","与今天的环保志愿服务、绿色校园活动结合，落地快","造林面积等数据须依据公开资料"],"values":["和谐","敬业","文明"],"scenes":["团日文化活动","文化志愿服务","校园文化宣传"],"taboos":["生态数据须准确","避免过度浪漫化艰苦条件"]},{"id":"spirit-tuopin","name":"脱贫攻坚精神","type":"社会主义先进文化","period":"2012年至2020年","keywords":["脱贫攻坚","乡村振兴","驻村第一书记","精准扶贫","全面小康"],"core":["上下同心、尽锐出战","精准务实、开拓创新","攻坚克难、不负人民"],"story":["2012年以来，中国实施精准扶贫方略，累计选派数百万名驻村干部","2020年底，现行标准下农村贫困人口全部脱贫，832个贫困县全部摘帽","大批青年干部在基层一线参与这场实践"],"today":["脱贫攻坚与乡村振兴有效衔接，成为大学生社会实践的重要方向","黄文秀等青年榜样的事迹在高校被广泛学习"],"writing":["用一组数字说明规模，再用一个人的故事落地","把乡村振兴与青年就业、社会实践选择联系起来","数据须引用权威发布口径"],"values":["富强","公正","友善"],"scenes":["团日文化活动","文化志愿服务","校园文化宣传"],"taboos":["不得使用歧视性、猎奇化表述描述脱贫地区","数据须准确"]},{"id":"spirit-yiqing","name":"伟大抗疫精神","type":"社会主义先进文化","period":"2020年以来","keywords":["抗疫","疫情防控","生命至上","举国同心","逆行者","白衣天使"],"core":["生命至上、举国同心","舍生忘死、尊重科学","命运与共"],"story":["面对突如其来的疫情，全国上下同心抗疫，广大医务人员与志愿者奋战一线","全社会在防控实践中展现出高度的组织动员能力与守望相助精神","抗疫精神成为中国精神谱系的重要组成部分"],"today":["医学院校与高校志愿服务组织常以此开展主题教育活动","公共卫生科普与健康校园建设延续了抗疫中的科学精神"],"writing":["落在具体的人与岗位上，避免宏大煽情","把尊重科学作为重点，与科普教育结合","不提具体争议话题，不作政策评价"],"values":["友善","敬业","和谐"],"scenes":["文化志愿服务","团日文化活动"],"taboos":["不评价具体防控政策与争议话题","不得泄露个人隐私信息"]},{"id":"spirit-kexuejia","name":"科学家精神","type":"社会主义先进文化","period":"新中国成立以来","keywords":["科学家精神","爱国","创新","求实","奉献","协同","育人","科学家"],"core":["胸怀祖国、服务人民的爱国精神","勇攀高峰、敢为人先的创新精神","追求真理、严谨治学的求实精神","淡泊名利、潜心研究的奉献精神","集智攻关、团结协作的协同精神","甘为人梯、奖掖后学的育人精神"],"story":["几代科技工作者在条件艰苦的环境中推动中国科技事业发展","李四光、钱学森、邓稼先、袁隆平等科学家的事迹成为精神典范","科学家的选择常常是在个人前途与国家需要之间做出的"],"today":["高校科协与科技社团常以科学家精神为主题开展宣讲与科普","与科研诚信、学术规范教育结合紧密"],"writing":["用一个具体选择讲精神，如回国或转行攻关，比罗列头衔有力","与学风建设、科研诚信结合，最容易在校园落地","科学家事迹须准确"],"values":["爱国","敬业","诚信"],"scenes":["团日文化活动","校园文化宣传","校园新媒体运营"],"taboos":["不得虚构科学家事迹","不得夸大成果价值"]},{"id":"spirit-nvpai","name":"女排精神","type":"社会主义先进文化","period":"1981年至今","keywords":["女排精神","中国女排","五连冠","顽强拼搏","团结协作"],"core":["祖国至上","团结协作","顽强拼搏","永不言败"],"story":["20世纪80年代中国女排取得五连冠，女排精神成为时代记忆","此后几十年间女排几经起伏，多次重返世界之巅","女排精神被概括为祖国至上、团结协作、顽强拼搏、永不言败"],"today":["校园体育赛事与运动会宣传常引用女排精神","与团队协作、集体荣誉感教育结合紧密"],"writing":["用一次关键比赛的细节讲不放弃，具体而紧张","校园运动队、社团招新文案适合使用这一素材","赛事成绩须准确，不夸大"],"values":["爱国","敬业","和谐"],"scenes":["校园文化宣传","校园新媒体运营","团日文化活动"],"taboos":["不得虚构比赛结果","避免唯成绩论宣传"]}]},"festivals":{"version":"1.0.0","note":"中国传统节日文化素材库，用于节令主题的宣传内容创作。","items":[{"id":"fest-chunjie","name":"春节","aliases":["过年","新春","农历新年"],"dateLabel":"农历正月初一，节期延续至元宵","keywords":["春节","过年","年夜饭","春联","守岁","拜年","团圆","非遗"],"summary":"春节是中华民族最隆重的传统节日，以辞旧迎新与阖家团圆为核心，节期从腊月一直延续到正月十五。2024年，中国人的春节实践列入人类非物质文化遗产代表作名录。","level":"人类非物质文化遗产代表作名录（2024年列入）","customs":["腊月扫尘、贴春联与窗花、备年货，年味从准备阶段就开始","除夕守岁与年夜饭，是一年中最重视的团圆时刻","正月拜年、走亲访友，以礼数维系人情网络"],"culture":["团圆是春节的核心观念，对应中国人对家庭与和谐的重视","春节是中华文化中参与人数最多、影响范围最广的节庆实践","2024年春节列入人类非遗代表作名录，标志其世界性意义获得确认"],"writing":["从一件具体的年俗讲起，比泛谈年味更抓人","把团圆作为情感主线，适合做校园征集与合影活动","节日元素可与非遗传承结合，如剪纸、春联、年画"],"values":["和谐","文明","友善"],"scenes":["校园文化宣传","校园新媒体运营","团日文化活动"],"taboos":["不得将年俗与迷信宜忌捆绑","涉及非遗表述须准确"]},{"id":"fest-yuanxiao","name":"元宵节","aliases":["上元节","灯节","正月十五"],"dateLabel":"农历正月十五","keywords":["元宵","花灯","猜灯谜","汤圆","上元","灯会"],"summary":"元宵节在农历正月十五，是一年中第一个月圆之夜，以赏花灯、猜灯谜、吃汤圆为主要节俗，为整个春节画上句号。","customs":["赏花灯与猜灯谜，是最具参与感的元宵活动","吃汤圆或元宵，取团圆圆满之意","舞龙舞狮、踩高跷等民间表演在各地盛行"],"culture":["元宵是春节的收束，也是新一年正式开始的仪式节点","灯谜把文字游戏与民间智慧结合，体现汉语的趣味性","节庆公共活动体现社区共同体意识"],"writing":["猜灯谜天然适合做校园互动与线上答题活动","用一盏灯讲古今，适合夜景类视觉呈现","可自编灯谜作为公众号互动内容"],"values":["文明","和谐","友善"],"scenes":["校园文化宣传","校园新媒体运营"],"taboos":["灯谜内容须正向健康","不得涉及低俗或政治敏感内容"]},{"id":"fest-qingming","name":"清明节","aliases":["踏青节","祭祖节"],"dateLabel":"公历四月四日至六日之间","keywords":["清明","祭扫","踏青","缅怀","英烈","寒食"],"summary":"清明节既是二十四节气之一，也是祭祖扫墓、缅怀先人的传统节日，同时兼具踏青游春的时令内涵。","customs":["扫墓祭祖、缅怀先人，表达追思与敬意","踏青、放风筝、插柳，亲近春日自然","各地开展祭扫烈士陵园、缅怀革命先烈的活动"],"culture":["清明兼有节气与节日双重身份，体现中国人对自然与人事的双重关照","祭祖是中华文化中慎终追远观念的集中体现","缅怀英烈使传统追思与国家记忆相连"],"writing":["与祭扫英烈、网上献花等校园活动结合，价值落点清晰","表达须庄重克制，避免过度抒情","适合做主题班会与宣讲稿"],"values":["爱国","文明","友善"],"scenes":["团日文化活动","校园文化宣传","文化志愿服务"],"taboos":["禁止低俗化、娱乐化祭扫内容","不得使用焚烧类违规宣传"]},{"id":"fest-duanwu","name":"端午节","aliases":["端阳节","龙舟节","五月节"],"dateLabel":"农历五月初五","keywords":["端午","屈原","龙舟","粽子","香囊","艾草","爱国"],"summary":"端午节在农历五月初五，源自上古祭龙与祛病防疫的节俗，后与纪念屈原的传统相融合，赛龙舟与吃粽子是最具代表性的活动。","level":"中国首个入选人类非物质文化遗产代表作名录的节日","customs":["包粽子、赛龙舟是最具代表性的活动","挂艾草、佩香囊、系五彩绳，寄托健康祝愿","纪念屈原，赋予节日深厚的家国情怀"],"culture":["屈原的爱国精神使端午超越时序节令，具有人格象征意义","龙舟竞渡体现集体协作与奋勇争先","端午是中国首个入选人类非遗的节日，文化地位特殊"],"writing":["把屈原的爱国精神作为立意主线，校园宣讲效果最好","包粽子、做香囊适合做可参与的线下活动","避免只写粽子好吃，要讲清节日的文化内核"],"values":["爱国","文明","和谐"],"scenes":["校园文化宣传","团日文化活动","非遗进校园"],"taboos":["不得将艾草香囊宣传为驱邪避疫的迷信功效","历史人物表述须准确"]},{"id":"fest-qixi","name":"七夕节","aliases":["乞巧节","女儿节","七月七"],"dateLabel":"农历七月初七","keywords":["七夕","乞巧","牛郎织女","刺绣","巧手","星象"],"summary":"七夕节在农历七月初七，传统内涵是女子乞巧，也就是向织女祈求心灵手巧，牛郎织女的传说让它成为最具浪漫色彩的节令。","customs":["传统上女子乞巧，向织女祈求心灵手巧，有穿针赛巧等习俗","观察牵牛织女星，形成独特的星象文化","与刺绣、编织等女红技艺相关联"],"culture":["乞巧的本质是对技艺与勤劳的崇尚，而不只是爱情联想","牛郎织女传说体现中国民间对星空与生活的诗意想象","与非遗手工艺结合，可转化为青年手作活动"],"writing":["把乞巧讲成古代的女子技能挑战赛，反差感强、传播度高","与刺绣、编织等非遗技艺结合做手作活动","避免只谈爱情，突出崇技尚劳的文化内涵"],"values":["敬业","文明","和谐"],"scenes":["校园文化宣传","非遗进校园","校园新媒体运营"],"taboos":["不得炒作消费主义话题","传说与史实须区分"]},{"id":"fest-zhongqiu","name":"中秋节","aliases":["月夕","八月节","团圆节"],"dateLabel":"农历八月十五","keywords":["中秋","月饼","赏月","团圆","嫦娥","月亮","思乡"],"summary":"中秋节在农历八月十五，以赏月、吃月饼与家人团聚为核心，是中华文化中团圆观念最集中的节日表达。","customs":["赏月、吃月饼、家人团聚是核心习俗","各地有舞火龙、烧塔、树中秋等特色活动","诗词与中秋关联密切，留下大量咏月名篇"],"culture":["中秋以月为媒，把个人思念与家国情怀连在一起","团圆观念与和谐价值直接呼应","是海外华人认同感最强的节日之一"],"writing":["用同一轮月亮把离家的人连起来，共情度最高","适合做家书、寄语与合影征集类校园活动","可结合咏月诗词做推文，但引用须准确"],"values":["和谐","友善","文明"],"scenes":["校园文化宣传","校园新媒体运营","文化志愿服务"],"taboos":["不得炒作高价礼品与消费攀比","诗词引用须核对原文与作者"]},{"id":"fest-chongyang","name":"重阳节","aliases":["老人节","登高节","九月九"],"dateLabel":"农历九月初九","keywords":["重阳","登高","敬老","菊花","茱萸","尊老"],"summary":"重阳节在农历九月初九，取双九相重之意，传统有登高、赏菊、插茱萸等习俗，当代又被赋予敬老爱老的时代内涵。","customs":["登高远眺、赏菊、插茱萸是传统习俗","因九为阳数之极，双九相重得名重阳","当代重阳节被赋予敬老爱老的时代内涵"],"culture":["敬老孝亲是中华传统美德的直接体现，与友善价值相通","重阳登高体现中国人积极向上的精神气象","是校园开展敬老志愿服务的天然节点"],"writing":["与社区敬老志愿服务结合，最容易做出现实行动","用一次探望、一通电话这样的小事切入，避免空谈孝道","适合做成志愿服务活动招募文案"],"values":["友善","文明","和谐"],"scenes":["文化志愿服务","校园文化宣传","校园新媒体运营"],"taboos":["不得将茱萸、菊花宣传为迷信或药效功能","避免对老年人的刻板化描述"]},{"id":"fest-dongzhi","name":"冬至","aliases":["冬节","亚岁","数九"],"dateLabel":"公历十二月二十一日至二十三日之间","keywords":["冬至","数九","饺子","汤圆","节气","团圆"],"summary":"冬至是二十四节气中最早被确定的节气之一，兼具节气与节日双重属性，北方吃饺子、南方吃汤圆的食俗差异十分鲜明。","customs":["北方有冬至吃饺子的习俗，南方多有吃汤圆、冬至团的做法","从冬至起数九，以九九消寒图记录寒冬进程","部分地区有祭祖、宴饮的传统"],"culture":["冬至是二十四节气中最早被确定的节气之一，兼具节气与节日属性","数九与消寒图体现中国人对时间的诗意记录方式","南北食俗差异是饮食文化地域性的生动样本"],"writing":["用北方饺子与南方汤圆做对比，互动性强、易引发讨论","把九九消寒图讲成古代的倒计时日历，趣味性高","与二十四节气系列内容形成呼应"],"values":["和谐","文明","友善"],"scenes":["校园文化宣传","校园新媒体运营","非遗进校园"],"taboos":["不得传播冬至进补的夸大功效说法","食俗描述须区分地域，避免绝对化"]},{"id":"fest-qingnian","name":"五四青年节","aliases":["五四运动纪念日","青年节"],"dateLabel":"公历五月四日","keywords":["五四","青年节","爱国主义","民主科学","青年","担当"],"summary":"五四青年节源于1919年的五四运动，是青年群体的节日，以爱国、进步、民主、科学为核心精神内涵。","customs":["高校开展主题团日、表彰、宣讲与志愿服务活动","入团仪式、重温入团誓词是常见的仪式化环节","以演讲、征文、短视频等形式表达青年担当"],"culture":["五四运动是中国近现代史上具有里程碑意义的爱国运动，孕育了以爱国、进步、民主、科学为主要内容的伟大五四精神","青年是民族复兴的重要力量，青年成长与国家发展紧密相连","爱国是五四精神的核心"],"writing":["把爱国落到校园里的具体行动上，避免空喊口号","入团仪式与宣誓内容庄重规范，须使用标准表述","适合与榜样青年故事搭配使用"],"values":["爱国","敬业","公正"],"scenes":["团日文化活动","校园文化宣传","校园新媒体运营"],"taboos":["严禁政治表述偏差","不得戏说历史事件"]}]},"core":{"version":"1.0.0","note":"社会主义核心价值观、应用场景与育人价值素材库，是内容生成时的价值校验依据。","values":[{"id":"val-fuqiang","name":"富强","level":"国家层面","meaning":"国家经济实力与综合国力强盛，是人民幸福与国家安全的物质基础。","links":{"heritage":["南京云锦织造技艺","景德镇手工制瓷技艺","中国传统制茶技艺及其相关习俗"],"brand":["张裕","老凤祥","王老吉"],"spirit":["两弹一星精神","特区精神","脱贫攻坚精神"],"festival":["春节"]},"writing":["把富强落到具体产业与技术的进步上，避免空泛。"]},{"id":"val-minzhu","name":"民主","level":"国家层面","meaning":"人民当家作主，人民享有广泛权利与自由。","links":{"heritage":["福建木偶戏后继人才培养计划"],"brand":[],"spirit":["遵义会议精神","西柏坡精神"],"festival":["五四青年节"]},"writing":["结合校园民主实践与青年参与来讲，避免抽象政治术语堆砌。"]},{"id":"val-wenming","name":"文明","level":"国家层面","meaning":"社会进步状态与良好的社会风尚，是文化传承与精神风貌的体现。","links":{"heritage":["昆曲","中国书法","中国篆刻","二十四节气","中国传统制茶技艺及其相关习俗"],"brand":["荣宝斋","同仁堂"],"spirit":[],"festival":["春节","中秋节"]},"writing":["把文明落到礼仪、审美与文化自觉上，可选一个非遗项目作载体。"]},{"id":"val-hexie","name":"和谐","level":"国家层面","meaning":"人与人、人与社会、人与自然协调共生的状态。","links":{"heritage":["二十四节气","侗族大歌","太极拳","中国传统木结构营造技艺"],"brand":["胡庆余堂"],"spirit":["塞罕坝精神"],"festival":["端午节","重阳节"]},"writing":["用天人合一、以柔克刚的技艺理念切入，抽象概念易落地。"]},{"id":"val-ziyou","name":"自由","level":"社会层面","meaning":"人的意志自由与存在和发展的自主性，在法治框架内实现。","links":{"heritage":["古琴艺术","中国书法","中国篆刻"],"brand":["荣宝斋"],"spirit":[],"festival":[]},"writing":["通过艺术创作中自由表达与传统法度的张力来表达。"]},{"id":"val-pingdeng","name":"平等","level":"社会层面","meaning":"公民在法律面前一律平等，享有平等的权利与机会。","links":{"heritage":["苏绣","苗绣"],"brand":[],"spirit":["雷锋精神"],"festival":[]},"writing":["把文化惠民的公共性与平等价值结合起来。"]},{"id":"val-gongzheng","name":"公正","level":"社会层面","meaning":"社会公平与正义，制度与规则的公平。","links":{"heritage":[],"brand":["胡庆余堂","同仁堂","瑞蚨祥"],"spirit":["遵义会议精神","西柏坡精神","红旗渠精神"],"festival":[]},"writing":["结合实事求是与坚持真理的历史案例来谈。"]},{"id":"val-fazhi","name":"法治","level":"社会层面","meaning":"依法治国，法律在社会治理中居于权威地位。","links":{"heritage":["中医针灸","中国传统制茶技艺及其相关习俗"],"brand":["王老吉"],"spirit":[],"festival":[]},"writing":["把非遗与文物保护的法规意识作为切入点，实用性强。"]},{"id":"val-aiguo","name":"爱国","level":"公民层面","meaning":"对祖国的深厚情感与自觉的责任担当。","links":{"heritage":["昆曲","中国书法"],"brand":["瑞蚨祥","张裕"],"spirit":["伟大建党精神","长征精神","伟大抗战精神","抗美援朝精神"],"festival":["五四青年节","春节"]},"writing":["落在具体的人、具体的选择上，避免口号化表达。"]},{"id":"val-jingye","name":"敬业","level":"公民层面","meaning":"对职业的忠诚与专注，精益求精的工作态度。","links":{"heritage":["宣纸制作技艺","南京云锦织造技艺","花丝镶嵌制作技艺","龙泉宝剑锻制技艺"],"brand":["张小泉","内联升","同仁堂"],"spirit":["科学家精神","雷锋精神"],"festival":[]},"writing":["用时间成本与工序数量讲匠心，数字最有说服力。"]},{"id":"val-chengxin","name":"诚信","level":"公民层面","meaning":"诚实守信，言行一致，遵守承诺。","links":{"heritage":["中国篆刻"],"brand":["胡庆余堂","同仁堂","瑞蚨祥"],"spirit":[],"festival":[]},"writing":["以老字号的经营规矩作为例证，比讲道理更有说服力。"]},{"id":"val-youshan","name":"友善","level":"公民层面","meaning":"人与人之间互相尊重、关心与帮助。","links":{"heritage":["中国传统制茶技艺及其相关习俗","太极拳"],"brand":["稻香村"],"spirit":["雷锋精神"],"festival":["重阳节","春节"]},"writing":["结合志愿服务活动做行动号召，落到具体可参与的事。"]}],"scenes":[{"id":"scene-campus-media","name":"校园新媒体运营","pain":"选题难、产量低、缺少有文化厚度的原创内容","solution":"用非遗与老字号知识库批量产出选题与图文脚本，保证每周稳定更新","deliverables":["公众号推文脚本","短视频口播稿","系列海报文案","微博话题文案"],"kpi":"选题产出效率、内容更新频率、互动量"},{"id":"scene-ich-campus","name":"非遗进校园","pain":"活动策划耗时、讲解词单薄、学生参与感弱","solution":"一键生成讲座提纲、体验课流程与讲解词，并附知识要点与互动问题","deliverables":["讲座提纲","体验课流程","讲解词","互动问答题库"],"kpi":"活动筹备时间、学生参与人数、活动满意度"},{"id":"scene-brand-promo","name":"老字号品牌推广","pain":"品牌故事讲不清、年轻受众不了解、传播素材陈旧","solution":"生成结构化品牌故事、卖点提炼与青年向传播文案，兼顾合规用语","deliverables":["品牌故事长文","卖点提炼表","海报文案","短视频脚本"],"kpi":"品牌故事传播量、年轻受众触达、转化线索"},{"id":"scene-volunteer","name":"文化志愿服务","pain":"志愿者培训材料不足、服务话术不统一、内容风险难把控","solution":"生成培训材料与讲解话术，并通过内置审核机制统一内容口径","deliverables":["志愿者培训要点","讲解话术","服务规范提示","审核清单"],"kpi":"培训完成率、服务质量、内容合规率"},{"id":"scene-youth-league","name":"团日文化活动","pain":"形式单一、学习材料枯燥、青年参与意愿不高","solution":"围绕红色精神谱系生成主题方案、微团课讲稿与知识竞赛题","deliverables":["活动方案","微团课讲稿","知识竞赛题库","主持词"],"kpi":"参与率、学习效果、活动留存率"},{"id":"scene-class-culture","name":"校园文化宣传","pain":"宣传素材同质化、文化内涵解读浅","solution":"按节日节气与主题节点自动生成系列化宣传内容","deliverables":["节日推文","节气系列文案","宣传标语","校园美陈文案"],"kpi":"内容覆盖面、师生触达率、文化认同度"}],"education":[{"title":"文化自信","detail":"让青年在亲手参与和日常使用中理解传统文化的当代价值，从知道变为了解，从了解变为认同。"},{"title":"价值引领","detail":"每一项内容都对应社会主义核心价值观的具体落点，使价值教育融入表达而非外挂。"},{"title":"工匠精神","detail":"以工序数量、时间成本、精度要求等可量化事实，让敬业与精益求精变得可感可知。"},{"title":"创新意识","detail":"在理解传统的基础上进行转化与再表达，培养守正创新的思维方式。"},{"title":"媒介素养","detail":"通过审核机制了解内容合规要求，学会识别历史虚无主义、绝对化宣传等表达风险。"}]},"moderation":{"version":"1.0.0","note":"正向内容审核规则库。分为三级：block（红线，禁止输出）、warn（风险，需改写）、notice（提示，需人工确认）。文化宣传场景专用，可随实际业务继续补充。","rules":[{"id":"red-nihilism","level":"block","category":"历史虚无主义与英烈保护","terms":["戏说历史","恶搞英烈","抹黑英雄","历史是任人打扮","英烈是编造","翻案","嘲讽革命","调侃先烈","解构英雄","重新评价历史人物功过是非"],"advice":"涉及党史、国史、军史与英雄烈士的内容必须严格依据权威表述，不得戏说、调侃或作虚无主义解读。","reference":"《中华人民共和国英雄烈士保护法》《中华人民共和国爱国主义教育法》"},{"id":"red-sovereignty","level":"block","category":"国家主权与政治安全","terms":["分裂国家","台独","藏独","疆独","港独","一中一台","两个中国","所谓独立"],"advice":"严禁出现损害国家主权和领土完整、分裂国家的任何表述，涉及港澳台内容须符合一个中国原则。","reference":"《中华人民共和国宪法》及相关法律"},{"id":"red-cult","level":"block","category":"非法信仰与邪教","terms":["邪教","法轮功","全能神","门徒会","传教","宣扬宗教","改信","入教"],"advice":"不得在校园文化宣传内容中出现宗教传播、劝人入教或涉及邪教组织的表述。","reference":"教育与宗教相分离的法定要求"},{"id":"red-illegal","level":"block","category":"违法违规内容","terms":["赌博","博彩","毒品","吸毒","枪支买卖","色情","淫秽","暴力恐怖","代考","刷单"],"advice":"涉及违法有害信息的内容一律不得输出，请修改选题方向。","reference":"网络信息内容生态治理相关规定"},{"id":"warn-superstition","level":"warn","category":"将民俗包装为迷信","terms":["算命","算命先生","看相","卜卦","占卜","驱邪","避邪","开光","转运","改运","化太岁","冲煞","风水宝地","招财符","请符","通灵","跳大神","求签"],"advice":"非遗与民俗内容应讲清历史渊源与文化内涵，不要把传统习俗包装成可以趋吉避凶的迷信功能。","rewrites":[["驱邪避疫","寄托健康祝愿"],["避邪","寄托吉祥祝愿"],["开光","传统工艺制作"],["转运改运","表达对美好生活的期许"]]},{"id":"warn-absolutewords","level":"warn","category":"绝对化宣传用语","terms":["最好","最佳","最强","第一品牌","全国第一","世界第一","唯一","最正宗","绝无仅有","顶级","极致","国家级","世界级","最高级","史上最","包治百病","万能"],"advice":"宣传用语避免绝对化表述，容易构成虚假宣传或违反广告法。建议改为可验证、有限定的表述。","reference":"《中华人民共和国广告法》关于绝对化用语的规定","rewrites":[["最正宗","具有代表性的"],["最好吃","口碑较好的"],["第一品牌","知名品牌"],["独一无二","特色鲜明"],["国家级","具有较高水平的"]]},{"id":"warn-medical","level":"warn","category":"医疗与功效宣称","terms":["治疗","治愈","根治","疗效","药效","抗癌","降血压","降血糖","减肥效果","包治","药到病除","有病治病","增强免疫力","延缓衰老","美白祛斑"],"advice":"保健、食品、化妆品类内容不得宣称疾病治疗功效，应改为文化或工艺角度的表述。","reference":"《中华人民共和国广告法》《中华人民共和国食品安全法》","rewrites":[["治疗失眠","传统养生文化中的安神理念"],["降血压","传统饮食调养方式"],["疗效显著","使用体验良好"],["增强免疫力","注重日常饮食均衡"]]},{"id":"warn-overcommercial","level":"warn","category":"过度商业化与投机表述","terms":["升值","保值增值","稳赚","暴涨","必涨","投资回报","限量抢购","错过再无","暴涨潜力","炒到","翻几倍"],"advice":"老字号与非遗宣传不宜与投资回报、投机涨价绑定，容易误导受众并偏离文化传播本位。","rewrites":[["升值空间大","具有文化收藏价值"],["稳赚","值得关注"],["暴涨","受到关注"]]},{"id":"warn-discrimination","level":"warn","category":"歧视与不当刻板印象","terms":["落后民族","野蛮","愚昧","原始部落","女德","三从四德","男尊女卑","外地人素质","乡下人","残废","瞎了"],"advice":"不得使用歧视性、侮辱性或带有贬损意味的表述描述民族、地域、性别与残障群体。","rewrites":[["落后地区","发展中地区"],["女德","传统家庭伦理中可供讨论的部分"],["残废","残疾"]]},{"id":"warn-religion-ethnic","level":"warn","category":"民族宗教表述规范","terms":["民族同化","异教徒","邪门歪道","忌讳提","低等宗教","土族信仰"],"advice":"涉及民族与宗教的表述须规范、尊重，避免价值高下判断与猎奇化描述。","rewrites":[["异教徒","持有不同信仰的人"]]},{"id":"warn-minors-alcohol","level":"warn","category":"未成年人相关限制","terms":["学生喝","校园酒","未成年人饮酒","同学聚会喝酒","微醺上头"],"advice":"面向校园的内容不得出现引导未成年人饮酒的表述，酒类内容须限定适用人群。","reference":"《中华人民共和国未成年人保护法》"},{"id":"notice-ip","level":"notice","category":"著作权与肖像权","terms":["传承人照片","大师作品","博物馆藏品","影视截图","网络图片","明星代言","演员肖像"],"advice":"使用传承人肖像、工艺作品、博物馆藏品与影视素材须取得授权或明确标注来源，避免侵权。"},{"id":"notice-title","level":"notice","category":"传承人称号规范","terms":["非遗大师","国宝级大师","民间国宝","非物质文化遗产传承人本人","正宗传承人"],"advice":"仅经文化和旅游部门认定的代表性传承人可使用相应称号，宣传中不得自行加封大师、国宝等头衔。","reference":"《中华人民共和国非物质文化遗产法》及代表性传承人认定与管理办法"},{"id":"notice-data","level":"notice","category":"数据与史料准确性","terms":["五千年文明从未中断","最早发明","空前绝后","据传有上万年历史"],"advice":"涉及名录数量、批次、年代、传承人等信息，须以官方发布口径为准，避免推断性表述。"},{"id":"notice-commercial-tone","level":"notice","category":"文化与商业边界","terms":["带货","限时秒杀","买到就是赚到","全网最低价"],"advice":"文化类宣传应避免直接转为商业促销话术，建议保留文化表达主线。"}],"positiveKeywords":["传承","创新","青年","校园","匠心","自信","匠心独运","坚守","研学","志愿服务","非遗","老字号","文化自信","创造性转化","创新性发展","守正创新"],"negativeKeywords":["没意思","过时","土气","没落","衰败","无人问津","无人传承","濒临消亡","老古董","没人要","失传已久"],"blocklistCategories":["历史虚无主义与英烈保护","国家主权与政治安全","非法信仰与邪教","违法违规内容"],"compliantFooter":"本内容由校园文化AIGC智能体辅助生成，请发布前人工复核事实、数据与授权信息。"},"users":{"note":"演示与测试账号。部署到公网前请修改默认口令，或改用统一身份认证。","accounts":[{"username":"demo","password":"huayun2026","displayName":"评委会演示账号","role":"reviewer","quota":500},{"username":"student","password":"xueyuan2026","displayName":"学生体验账号","role":"student","quota":100},{"username":"admin","password":"huayun-admin","displayName":"运营管理员","role":"admin","quota":2000}]}};
+
+const heritage = __DATA__.heritage;
+const brands = __DATA__.brands;
+const spirits = __DATA__.spirits;
+const festivals = __DATA__.festivals;
+const core = __DATA__.core;
+const moderation = __DATA__.moderation;
+const users = __DATA__.users;
+
+/** 把各知识库条目归一化为统一结构，供检索与生成使用。 */
+function composedSummary(item, kind) {
+  if (kind === 'brand') {
+    const head = `${item.name}创立于${item.foundedLabel || '近代'}${item.origin ? `，发端于${item.origin}` : ''}，是${item.industry || '传统行业'}领域的中华老字号。`;
+    return item.story?.[0] ? `${head}${item.story[0]}。` : head;
+  }
+  if (kind === 'spirit') {
+    const core = (item.core || []).slice(0, 2).join('、');
+    return `${item.name}是中国共产党人精神谱系中的重要内容，核心内涵包括${core}等。其形成与发展脉络：${item.period || '新中国成立以来'}。`;
+  }
+  if (kind === 'festival') {
+    return `${item.name}是中华传统节日之一，${(item.customs || [])[0] || ''}。`;
+  }
+  return `${item.name}是${item.category || '中华优秀传统文化'}领域的代表性内容。`;
+}
+
+const VIDEO_TOPIC = {
+  heritage: ['非遗', '技艺'],
+  brand: ['老字号', '品牌故事'],
+  spirit: ['', '纪录片'],
+  festival: ['习俗', '由来']
+};
+
+/** 每条知识对应的视频入口：指向各平台按热度排序的搜索结果，不伪造视频链接。 */
+function deriveVideo(item, kind) {
+  if (item.video) return item.video;
+  const [main, alt] = VIDEO_TOPIC[kind] || ['文化', '介绍'];
+  const primary = main ? `${item.name} ${main}` : item.name;
+  return {
+    title: `${item.name} · 视频介绍`,
+    bilibili: `https://search.bilibili.com/all?keyword=${encodeURIComponent(primary)}&order=click`,
+    douyin: `https://www.douyin.com/search/${encodeURIComponent(primary)}`,
+    xiaohongshu: `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(`${item.name} ${alt}`)}`
+  };
+}
+
+function normalize(item, kind) {
+  const blocks = [];
+  const push = (label, value) => {
+    const items = Array.isArray(value) ? value.filter(Boolean) : value ? [value] : [];
+    if (items.length) blocks.push({ label, items });
+  };
+
+  if (kind === 'heritage') {
+    push('核心特征', item.craft);
+    push('文化内涵', item.culture);
+    push('当代传承', item.today);
+    push('传播要点', item.writing);
+  } else if (kind === 'brand') {
+    push('品牌源起', item.story);
+    push('技艺与品质', item.craft);
+    push('文化价值', item.culture);
+    push('当代传承', item.today);
+    push('传播要点', item.writing);
+  } else if (kind === 'spirit') {
+    push('精神内涵', item.core);
+    push('历史脉络', item.story);
+    push('当代传承', item.today);
+    push('传播要点', item.writing);
+  } else if (kind === 'festival') {
+    push('节俗活动', item.customs);
+    push('文化内涵', item.culture);
+    push('传播要点', item.writing);
+  }
+
+  const textPool = [
+    item.name,
+    ...(item.aliases || []),
+    item.category,
+    item.industry,
+    item.type,
+    item.region,
+    item.origin,
+    item.summary,
+    item.meaning,
+    item.summary || item.meaning ? '' : composedSummary(item, kind),
+    item.dateLabel,
+    item.foundedLabel,
+    item.level,
+    ...(item.keywords || []),
+    ...blocks.flatMap((b) => b.items),
+    ...(item.values || []),
+    ...(item.scenes || []),
+    ...(item.taboos || [])
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return {
+    id: item.id,
+    kind,
+    name: item.name,
+    aliases: item.aliases || [],
+    keywords: item.keywords || [],
+    category: item.category || item.industry || item.type || '综合',
+    level: item.level || (kind === 'brand' ? '中华老字号' : ''),
+    year: item.year || item.founded || null,
+    era: item.foundedLabel || item.dateLabel || item.period || '',
+    region: item.region || item.origin || '',
+    summary: item.summary || item.meaning || composedSummary(item, kind),
+    blocks,
+    writing: item.writing || [],
+    values: item.values || [],
+    scenes: item.scenes || [],
+    taboos: item.taboos || [],
+    video: deriveVideo(item, kind),
+    works: (item.works || []).map((w) => (typeof w === 'string' ? { name: w, url: workUrl(w) } : w)),
+    raw: item,
+    textPool
+  };
+}
+
+/** 相关作品介绍链接：以维基百科中文条目为准。 */
+function workUrl(name) {
+  return `https://zh.wikipedia.org/wiki/${encodeURIComponent(name)}`;
+}
+
+const entries = [
+  ...heritage.items.map((i) => normalize(i, 'heritage')),
+  ...brands.items.map((i) => normalize(i, 'brand')),
+  ...spirits.items.map((i) => normalize(i, 'spirit')),
+  ...festivals.items.map((i) => normalize(i, 'festival'))
+];
+
+const db = {
+  heritage,
+  brands,
+  spirits,
+  festivals,
+  core,
+  moderation,
+  users,
+  entries,
+  stats: {
+    heritage: heritage.items.length,
+    brands: brands.items.length,
+    spirits: spirits.items.length,
+    festivals: festivals.items.length,
+    values: core.values.length,
+    scenes: core.scenes.length,
+    entries: entries.length,
+    moderationRules: moderation.rules.length
+  }
+};
+
+function findEntry(id) {
+  return entries.find((e) => e.id === id) || null;
+}
+
+function entriesByKind(kind) {
+  return kind ? entries.filter((e) => e.kind === kind) : entries;
+}
+
+
+const SPLIT_RE = /[\s，。、；：？！“”‘’（）《》〈〉【】,.!?;:"'()\[\]<>·—…~～\-_/\\|@#$%^&*+=`]+/;
+
+/** 中文按二元切分，兼顾英文与数字 token。 */
+function tokenize(text) {
+  if (!text) return [];
+  const cleaned = String(text).toLowerCase().replace(SPLIT_RE, ' ');
+  const tokens = [];
+  for (const chunk of cleaned.split(' ')) {
+    if (!chunk) continue;
+    const runs = chunk.match(/[\u4e00-\u9fff]+/g) || [];
+    for (const run of runs) {
+      if (run.length === 1) {
+        tokens.push(run);
+        continue;
+      }
+      for (let i = 0; i < run.length - 1; i += 1) tokens.push(run.slice(i, i + 2));
+      if (run.length <= 4) tokens.push(run);
+    }
+    const latin = chunk.match(/[a-z0-9]+/g) || [];
+    for (const item of latin) tokens.push(item);
+  }
+  return tokens;
+}
+
+/** 常见同义与口语化表达的归一化扩展。 */
+const SYNONYMS = [
+  [['剪纸', '窗花', '刻纸'], '中国剪纸'],
+  [['京剧', '国剧', '皮黄'], '京剧'],
+  [['昆曲', '昆剧', '水磨调'], '昆曲'],
+  [['古琴', '七弦琴'], '古琴艺术'],
+  [['书法', '毛笔字', '翰墨'], '中国书法'],
+  [['篆刻', '印章'], '中国篆刻'],
+  [['皮影'], '皮影戏'],
+  [['节气', '立春', '冬至', '夏至', '物候'], '二十四节气'],
+  [['榫卯', '木结构', '斗拱'], '中国传统木结构营造技艺'],
+  [['云锦'], '南京云锦织造技艺'],
+  [['宣纸'], '宣纸制作技艺'],
+  [['活字', '毕昇', '印刷术'], '中国活字印刷术'],
+  [['青瓷', '龙泉瓷'], '龙泉青瓷传统烧制技艺'],
+  [['景德镇', '瓷都', '青花'], '景德镇手工制瓷技艺'],
+  [['苏绣', '刺绣', '双面绣'], '苏绣'],
+  [['苗绣', '苗服'], '苗绣'],
+  [['花丝', '细金'], '花丝镶嵌制作技艺'],
+  [['宝剑', '龙泉剑'], '龙泉宝剑锻制技艺'],
+  [['针灸', '经络', '艾灸'], '中医针灸'],
+  [['太极'], '太极拳'],
+  [['茶', '制茶', '茶叶', '茶文化'], '中国传统制茶技艺及其相关习俗'],
+  [['木版水印', '饾版'], '木版水印技艺'],
+  [['蓝印花布', '蓝染'], '南通蓝印花布印染技艺'],
+  [['黎锦', '黎族'], '黎族传统纺染织绣技艺'],
+  [['木偶', '提线木偶'], '福建木偶戏后继人才培养计划'],
+  [['侗族', '侗歌'], '侗族大歌'],
+  [['南音', '南管'], '南音'],
+  [['珠算', '算盘'], '中国珠算'],
+  [['老字号', '百年老店', '中华老字号'], '老字号'],
+  [['红色', '革命', '党史', '英烈'], '革命文化'],
+  [['核心价值观', '社会主义'], '社会主义核心价值观'],
+  [['春节', '过年'], '春节'],
+  [['端午', '屈原'], '端午节'],
+  [['中秋', '月饼'], '中秋节'],
+  [['重阳', '敬老'], '重阳节'],
+  [['清明', '祭扫'], '清明节'],
+  [['元宵', '花灯', '灯谜'], '元宵节']
+];
+
+function expandQuery(query) {
+  const q = String(query || '');
+  const hits = [];
+  for (const [needles, canonical] of SYNONYMS) {
+    if (needles.some((n) => q.includes(n))) hits.push(canonical);
+  }
+  return hits;
+}
+
+function fieldTokens(entry) {
+  return {
+    identity: [...tokenize(entry.name), ...entry.aliases.flatMap(tokenize)],
+    keywords: entry.keywords.flatMap(tokenize),
+    meta: [...tokenize(entry.category), ...tokenize(entry.region), ...tokenize(entry.era), ...entry.scenes.flatMap(tokenize), ...entry.values.flatMap(tokenize)],
+    body: tokenize(entry.textPool)
+  };
+}
+
+const WEIGHTS = { identity: 7, keywords: 4, meta: 1.6, body: 0.9 };
+
+const index = new Map();
+let totalEntries = 0;
+
+function addToken(token, entryIdx, weight) {
+  let bucket = index.get(token);
+  if (!bucket) {
+    bucket = new Map();
+    index.set(token, bucket);
+  }
+  bucket.set(entryIdx, Math.max(bucket.get(entryIdx) || 0, weight));
+}
+
+db.entries.forEach((entry, idx) => {
+  totalEntries += 1;
+  const fields = fieldTokens(entry);
+  for (const [field, tokens] of Object.entries(fields)) {
+    for (const token of tokens) addToken(token, idx, WEIGHTS[field]);
+  }
+  // 名称整串入索引，保证精确命中
+  addToken(entry.name.toLowerCase(), idx, 20);
+});
+
+function idf(token) {
+  const df = index.get(token)?.size || 0;
+  return Math.log(1 + totalEntries / Math.max(1, df));
+}
+
+function snippetOf(entry, queryTokens) {
+  const candidates = [entry.summary, ...entry.blocks.flatMap((b) => b.items)];
+  for (const text of candidates) {
+    const tokens = tokenize(text);
+    if (queryTokens.some((t) => tokens.includes(t))) {
+      return text.length > 140 ? `${text.slice(0, 138)}…` : text;
+    }
+  }
+  return entry.summary ? entry.summary.slice(0, 140) : '';
+}
+
+/**
+ * 检索知识库。
+ * @param {string} query 用户问题
+ * @param {{kind?: string, limit?: number, values?: string[]}} options
+ */
+function search(query, options = {}) {
+  const { kind, limit = 5, values } = options;
+  const q = String(query || '').trim();
+  if (!q) return [];
+
+  const queryTokens = tokenize(q);
+  const expansions = expandQuery(q).flatMap(tokenize);
+  const allTokens = [...new Set([...queryTokens, ...expansions])];
+  const scores = new Map();
+  const matched = new Map();
+  const namedValues = db.core.values.map((v) => v.name).filter((v) => q.includes(v));
+
+  for (const token of allTokens) {
+    const bucket = index.get(token);
+    if (!bucket) continue;
+    const weight = idf(token);
+    for (const [entryIdx, fieldWeight] of bucket) {
+      const add = weight * fieldWeight;
+      scores.set(entryIdx, (scores.get(entryIdx) || 0) + add);
+      if (!matched.has(entryIdx)) matched.set(entryIdx, new Set());
+      matched.get(entryIdx).add(token);
+    }
+  }
+
+  const results = [];
+  for (const [entryIdx, score] of scores) {
+    const entry = db.entries[entryIdx];
+    if (kind && entry.kind !== kind) continue;
+    let final = score / Math.sqrt(Math.max(1, allTokens.length));
+    const lower = q.toLowerCase();
+    if (entry.name && lower.includes(entry.name.toLowerCase())) final += 12;
+    if (entry.aliases.some((a) => a && lower.includes(a.toLowerCase()))) final += 8;
+    if (namedValues.length) final += entry.values.filter((v) => namedValues.includes(v)).length * 4;
+    if (values?.length) {
+      const overlap = entry.values.filter((v) => values.includes(v)).length;
+      final += overlap * 3.5;
+    }
+    const hits = [...(matched.get(entryIdx) || [])].filter((t) => queryTokens.includes(t));
+    if (hits.length === 0 && final < 14) continue;
+    results.push({
+      id: entry.id,
+      kind: entry.kind,
+      name: entry.name,
+      category: entry.category,
+      level: entry.level,
+      era: entry.era,
+      region: entry.region,
+      score: Number(final.toFixed(2)),
+      snippet: snippetOf(entry, queryTokens),
+      matchedTerms: hits.slice(0, 8),
+      values: entry.values,
+      entry
+    });
+  }
+
+  results.sort((a, b) => b.score - a.score || a.name.length - b.name.length || a.id.localeCompare(b.id));
+  return results.slice(0, limit);
+}
+
+/** 按价值观筛选取材。 */
+function searchByValue(value, limit = 6) {
+  const hits = db.entries.filter((e) => e.values.includes(value));
+  return hits.slice(0, limit);
+}
+
+function catalog() {
+  return db.entries.map((e) => ({
+    id: e.id,
+    kind: e.kind,
+    name: e.name,
+    category: e.category,
+    level: e.level,
+    era: e.era,
+    region: e.region,
+    summary: e.summary,
+    values: e.values,
+    scenes: e.scenes
+  }));
+}
+
+const KIND_LABEL = {
+  heritage: '非物质文化遗产',
+  brand: '中华老字号',
+  spirit: '革命文化与先进文化',
+  festival: '传统节日'
+};
+
+const LEVEL_ORDER = { pass: 0, notice: 1, warn: 2, block: 3 };
+
+function collectHits(text, rule) {
+  const hits = [];
+  for (const term of rule.terms) {
+    const idx = text.indexOf(term);
+    if (idx >= 0 && !isProhibitedContext(text, idx) && !isExempt(text, idx, term)) hits.push({ term, index: idx });
+  }
+  return hits;
+}
+
+// 安全指引本身会引用风险词（如「不得把节气与算命捆绑」），
+// 这类出现在禁止性表述中的命中属于自指，不应判为风险。
+const PROHIBITION_MARKERS = ['不得', '不要', '禁止', '严禁', '避免', '不作', '不应', '不宜', '切勿', '杜绝', '防止', '不把', '不将', '不涉', '不宣传', '拒绝'];
+
+function isProhibitedContext(text, index) {
+  const window = text.slice(Math.max(0, index - 14), index);
+  return PROHIBITION_MARKERS.some((m) => window.includes(m));
+}
+
+// 官方称号与事实性表述不受绝对化用语规则约束。
+// 例如「国家级非物质文化遗产代表性项目」「唯一入选人类非遗名录」是规范表述，
+// 而「国家级品质」属于宣传夸大。
+const DESIGNATION_EXEMPTIONS = [
+  { term: '国家级', contains: ['非物质文化遗产', '非遗', '名录', '代表性项目', '文物保护单位', '文化生态保护区', '传统村落', '博物馆'] },
+  { term: '世界级', contains: ['非物质文化遗产', '非遗', '名录'] },
+  { term: '唯一', contains: ['人类非物质文化遗产', '人类非遗', '名录', '入选'] },
+  { term: '第一', contains: ['第一批', '第一批次', '第一个农村革命根据地', '第一面五星红旗', '第一颗', '五大发明'] }
+];
+
+function isExempt(text, index, term) {
+  const rule = DESIGNATION_EXEMPTIONS.find((e) => e.term === term);
+  if (!rule) return false;
+  const window = text.slice(Math.max(0, index - 12), Math.min(text.length, index + term.length + 16));
+  return rule.contains.some((c) => window.includes(c));
+}
+
+function rewriteFor(rule, term) {
+  const pairs = rule.rewrites || [];
+  for (const [from, to] of pairs) {
+    if (from.includes(term) || term.includes(from)) return to;
+  }
+  return null;
+}
+
+/**
+ * 正向内容审核。
+ * @param {string} text 待审核文本
+ * @param {{strict?: boolean}} options
+ */
+function check(text, options = {}) {
+  const content = String(text || '');
+  const findings = [];
+  let level = 'pass';
+
+  for (const rule of db.moderation.rules) {
+    const hits = collectHits(content, rule);
+    if (!hits.length) continue;
+    findings.push({
+      ruleId: rule.id,
+      level: rule.level,
+      category: rule.category,
+      terms: hits.map((h) => h.term),
+      advice: rule.advice,
+      reference: rule.reference || '',
+      suggestions: hits
+        .map((h) => {
+          const target = rewriteFor(rule, h.term);
+          return target ? { from: h.term, to: target } : null;
+        })
+        .filter(Boolean)
+    });
+    if (LEVEL_ORDER[rule.level] > LEVEL_ORDER[level]) level = rule.level;
+  }
+
+  const positives = db.moderation.positiveKeywords.filter((k) => content.includes(k));
+  const negatives = db.moderation.negativeKeywords.filter((k) => content.includes(k));
+  if (negatives.length >= 3 && LEVEL_ORDER[level] < LEVEL_ORDER.warn) level = 'warn';
+
+  const chars = content.replace(/\s/g, '').length;
+  const positiveRatio = chars ? Number((positives.length / Math.max(1, chars / 60)).toFixed(2)) : 0;
+
+  return {
+    level,
+    status: level === 'block' ? '禁止输出' : level === 'warn' ? '需改写后输出' : level === 'notice' ? '可输出，需人工确认' : '通过',
+    passed: level !== 'block',
+    findings,
+    positives,
+    negatives,
+    positiveRatio,
+    checkedAt: new Date().toISOString(),
+    footer: db.moderation.compliantFooter
+  };
+}
+
+/** 依据审核建议自动改写文本。 */
+function sanitize(text) {
+  let output = String(text || '');
+  const changes = [];
+  for (const rule of db.moderation.rules) {
+    if (rule.level === 'block') continue;
+    for (const term of rule.terms) {
+      const idx = output.indexOf(term);
+      if (idx < 0 || isProhibitedContext(output, idx) || isExempt(output, idx, term)) continue;
+      const target = rewriteFor(rule, term);
+      if (!target) continue;
+      output = output.split(term).join(target);
+      changes.push({ from: term, to: target, ruleId: rule.id });
+    }
+  }
+  return { text: output, changes };
+}
+
+/** 审核报告转成自然语言，便于在回答中展示。 */
+function describe(report) {
+  if (!report.findings.length) {
+    return `审核结论：${report.status}。未发现风险表述${report.positives.length ? `，检测到正向表达：${report.positives.slice(0, 6).join('、')}` : ''}。`;
+  }
+  const lines = [`审核结论：${report.status}。`];
+  for (const f of report.findings) {
+    lines.push(`· [${f.level === 'block' ? '红线' : f.level === 'warn' ? '风险' : '提示'}] ${f.category}：命中「${f.terms.join('、')}」。${f.advice}`);
+  }
+  return lines.join('\n');
+}
+
+const AGENT_PERSONA = '华韵';
+
+const SYSTEM_PROMPT = `你是校园文化AIGC智能体「华韵」的创作引擎，服务于非物质文化遗产与中华老字号的宣传推广。
+
+【立场】坚持社会主义核心价值观引领，以传承中华优秀传统文化、革命文化、社会主义先进文化为使命。
+【风格】准确、克制、有画面感。使用具体的技艺细节、工序、年代、场景，而不是空泛的赞美词。
+【禁止】不使用"赋能、闭环、抓手、势能、生态位"一类空话；不使用"不仅是…更是…"句式；不堆砌四字成语；不使用绝对化用语（最好、第一、唯一、国家级）；不宣称医疗或保健功效；不把民俗包装成迷信。
+【事实】只能使用提供的知识库素材，不虚构年代、人物、数据与传承人信息；材料不足时明确说明需要补充。
+【结构】先给结论或主张，再给支撑事实，最后给可执行的传播建议。
+【输出】使用简洁的中文，标题不超过20字，正文用短句。若提供了知识库素材，须在结尾列出引用来源条目名称。`;
+
+function knowledgeBlock(entries) {
+  if (!entries.length) return '（知识库未命中相关条目）';
+  return entries
+    .map((e) => {
+      const lines = [
+        `【${e.name}】类别：${e.category}${e.level ? `｜级别：${e.level}` : ''}${e.era ? `｜年代：${e.era}` : ''}`,
+        e.summary ? `简介：${e.summary}` : '',
+        ...e.blocks.map((b) => `${b.label}：${b.items.join('；')}`),
+        e.values.length ? `对应价值观：${e.values.join('、')}` : '',
+        e.taboos.length ? `表达禁忌：${e.taboos.join('；')}` : ''
+      ].filter(Boolean);
+      return lines.join('\n');
+    })
+    .join('\n\n');
+}
+
+const TASK_SPECS = {
+  qa: '任务：回答用户的文化知识提问。要求先给出直接结论，再分层展开，最后给出1至2条可传播的表达建议。',
+  ich_copy: '任务：撰写非物质文化遗产介绍文案。要求包含标题、导语、主体三到四个小节、一句价值落点、结尾互动引导与话题标签。',
+  brand_story: '任务：撰写老字号品牌故事。要求按品牌源起、技艺与品质、文化价值、当代传承、时代寄语五个部分展开，用具体细节代替形容。',
+  poster: '任务：产出文化宣传海报文案。要求包含主标题（不超过12字）、副标题、一句核心标语、三行正文、行动号召、视觉呈现建议（主色、元素、构图）。',
+  activity: '任务：设计校园文化活动方案。要求包含活动背景与目的、活动主题、时间地点与对象、流程安排、物料清单、人员分工、宣传方案、内容合规提示、预期成效。',
+  slogan: '任务：生成宣传标语。要求给出8至10条，风格分为庄重、青春、简短三类，每条不超过20字，避免口号化与空泛。',
+  speech: '任务：撰写宣讲稿或微团课讲稿。要求有开场引入、三个层次的主体、价值升华与结尾号召，语言适合口头表达，篇幅约700至1000字。',
+  quiz: '任务：编写文化知识竞赛题目。要求生成10道题，题型包含单选、多选、判断、填空，每题标注答案与一句知识点解析。'
+};
+
+/**
+ * 构建一次完整的大模型调用消息。本地生成模式不经过此函数。
+ */
+function buildMessages({ intent = 'qa', topic = '', params = {}, history = [], entries = [] }) {
+  const spec = TASK_SPECS[intent] || TASK_SPECS.qa;
+  const paramLines = Object.entries(params)
+    .filter(([, v]) => v)
+    .map(([k, v]) => `${k}：${v}`);
+
+  const parts = [
+    spec,
+    topic ? `主题对象：${topic}` : '',
+    paramLines.length ? `生成参数：${paramLines.join('｜')}` : '',
+    '',
+    '可使用的知识库素材（只能使用以下事实）：',
+    knowledgeBlock(entries),
+    '',
+    `社会主义核心价值观可用落点：${db.core.values.map((v) => v.name).join('、')}`
+  ];
+
+  const messages = [{ role: 'system', content: SYSTEM_PROMPT }];
+  for (const item of history.slice(-6)) {
+    if (item.role && item.content) messages.push({ role: item.role, content: item.content });
+  }
+  messages.push({ role: 'user', content: parts.filter(Boolean).join('\n') });
+  return messages;
+}
+
+const TASK_LABELS = {
+  qa: '文化知识问答',
+  ich_copy: '非遗介绍文案',
+  brand_story: '老字号品牌故事',
+  poster: '宣传海报文案',
+  activity: '校园活动方案',
+  slogan: '宣传标语生成',
+  speech: '宣讲稿 / 微团课',
+  quiz: '知识竞赛题库'
+};
+
+/**
+ * 可选的大模型接入层。未配置时应用使用本地知识库生成引擎，功能完整可离线运行。
+ * 支持任何 OpenAI 兼容的 /chat/completions 接口。纯前端版本：配置保存在浏览器 localStorage。
+ */
+
+function savedConfig() {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      return JSON.parse(localStorage.getItem('huayun.llm') || 'null') || {};
+    }
+  } catch {
+    /* 忽略读取失败 */
+  }
+  return {};
+}
+
+function resolveConfig(override = {}) {
+  const saved = savedConfig();
+  const cfg = {
+    baseUrl: override.baseUrl || saved.baseUrl || '',
+    apiKey: override.apiKey || saved.apiKey || '',
+    model: override.model || saved.model || 'gpt-4o-mini',
+    temperature: Number(override.temperature || saved.temperature || 0.7)
+  };
+  if (!cfg.baseUrl || !cfg.apiKey) return null;
+  cfg.endpoint = cfg.baseUrl.replace(/\/+$/, '') + (/\/chat\/completions$/.test(cfg.baseUrl) ? '' : '/chat/completions');
+  return cfg;
+}
+
+function isConfigured(override) {
+  return Boolean(resolveConfig(override));
+}
+
+async function chat(messages, { override, temperature = 0.7, maxTokens = 1600 } = {}) {
+  const cfg = resolveConfig(override);
+  if (!cfg) {
+    const err = new Error('未配置大模型接口，已切换为本地知识库生成引擎');
+    err.code = 'LLM_NOT_CONFIGURED';
+    throw err;
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 60000);
+  try {
+    const res = await fetch(cfg.endpoint, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${cfg.apiKey}`
+      },
+      body: JSON.stringify({
+        model: cfg.model,
+        messages,
+        temperature,
+        max_tokens: maxTokens
+      }),
+      signal: controller.signal
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '');
+      const err = new Error(`大模型接口返回 ${res.status}：${detail.slice(0, 300)}`);
+      err.code = 'LLM_HTTP_ERROR';
+      throw err;
+    }
+    const data = await res.json();
+    const text = data?.choices?.[0]?.message?.content;
+    if (!text) {
+      const err = new Error('大模型接口返回内容为空');
+      err.code = 'LLM_EMPTY';
+      throw err;
+    }
+    return { text: text.trim(), usage: data.usage || null, model: data.model || cfg.model };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
+ * 纯前端演示账号：会话保存在浏览器 localStorage，不做密码学签名。
+ * 账号与口令来自 public/data/users.json，仅用于赛事演示，不提供真实安全。
+ */
+const STORAGE_KEY = 'huayun.session';
+
+function readSession() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+  } catch {
+    return null;
+  }
+}
+
+function writeSession(session) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+  } catch {
+    /* 忽略写入失败 */
+  }
+}
+
+function login(username, password) {
+  const user = db.users.accounts.find((a) => a.username === String(username || '').trim());
+  if (!user || user.password !== String(password || '')) {
+    return { ok: false, error: '账号或密码不正确' };
+  }
+  const session = {
+    username: user.username,
+    role: user.role,
+    displayName: user.displayName,
+    quota: user.quota || 200,
+    calls: 0,
+    createdAt: Date.now()
+  };
+  writeSession(session);
+  return {
+    ok: true,
+    token: `${user.username}-${Date.now()}`,
+    user: { username: user.username, displayName: user.displayName, role: user.role, quota: user.quota }
+  };
+}
+
+function verify() {
+  return readSession();
+}
+
+function consume(session) {
+  if (!session) return { allowed: true, remaining: null };
+  session.calls += 1;
+  const remaining = Math.max(0, session.quota - session.calls);
+  writeSession(session);
+  return { allowed: remaining > 0, remaining };
+}
+
+function logout() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* 忽略 */
+  }
+}
+
+function publicAccounts() {
+  return db.users.accounts.map((a) => ({
+    username: a.username,
+    displayName: a.displayName,
+    role: a.role,
+    passwordHint: a.username === 'demo' ? 'huayun2026' : '见提交材料中的测试账号说明'
+  }));
+}
+
+/* ------------------------------------------------------------------ 工具 */
+
+function seedOf(text) {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i += 1) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function rngFrom(seed) {
+  let a = seed;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const pick = (rng, arr) => (arr && arr.length ? arr[Math.floor(rng() * arr.length) % arr.length] : '');
+
+/** 中文并列：和谐与文明 / 文明、和谐与友善 */
+function joinCn(list) {
+  const arr = (list || []).filter(Boolean);
+  if (arr.length <= 1) return arr.join('');
+  if (arr.length === 2) return `${arr[0]}与${arr[1]}`;
+  return `${arr.slice(0, -1).join('、')}与${arr[arr.length - 1]}`;
+}
+
+/** 取一个适合作为切入点的短细节，避免把整句塞进模板 */
+function shortDetail(text, max = 16) {
+  const first = String(text || '').split(/[，。；、]/)[0].trim();
+  return first.length > max ? `${first.slice(0, max)}…` : first;
+}
+
+/** 按条目顺序展开要点，兼容不同知识库的字段命名差异 */
+function keyItems(entry, n = 6) {
+  return entry.blocks.flatMap((b) => b.items).slice(0, n);
+}
+
+function kwOf(entry, n = 3) {
+  return entry.keywords.filter((k) => k !== entry.name).slice(0, n).join('、');
+}
+
+function blockItems(entry, index, n = 3) {
+  return (entry.blocks[index]?.items || []).slice(0, n);
+}
+
+/** 从摘要里挑一句信息量最大、适合做副标题的话 */
+function subtitleFor(entry) {
+  const sentences = String(entry.summary || '')
+    .split(/[，。；！？]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const preferred = sentences.filter((s) => s.length >= 8 && s.length <= 18 && !s.startsWith(entry.name));
+  const pool = preferred.length ? preferred : sentences.filter((s) => s.length >= 6 && s.length <= 22);
+  if (!pool.length) return entry.category;
+  return [...pool].sort((a, b) => b.length - a.length)[0];
+}
+
+function pickMany(rng, arr, n) {
+  const pool = [...(arr || [])];
+  const out = [];
+  while (pool.length && out.length < n) out.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]);
+  return out;
+}
+
+function clips(text) {
+  return String(text || '')
+    .split(/[，。；！？、]/)
+    .map((s) => s.trim())
+    .filter((s) => s.length >= 4);
+}
+
+function clip(text, min = 6, max = 18) {
+  return clips(text).find((c) => c.length >= min && c.length <= max) || '';
+}
+
+function blockOf(entry, label) {
+  return entry.blocks.find((b) => b.label === label)?.items || [];
+}
+
+function valueRefs(entry) {
+  return entry.values.map((v) => db.core.values.find((x) => x.name === v)).filter(Boolean);
+}
+
+function citeOf(entry) {
+  return {
+    id: entry.id,
+    name: entry.name,
+    kind: entry.kind,
+    kindLabel: KIND_LABEL[entry.kind] || '',
+    category: entry.category,
+    level: entry.level,
+    values: entry.values
+  };
+}
+
+const PLATFORM_HINTS = {
+  公众号: '公众号推文适合长导语加小标题，段落之间留白，配图建议用工艺细节特写。',
+  小红书: '小红书适合短句加分行，标题带一个具体信息点，结尾放互动提问与话题标签。',
+  短视频: '短视频需要前三秒给出一个反常识知识点，画面与口播错位配合，总时长控制在一分钟以内。',
+  微博: '微博话题文案控制在一百四十字内，开头直给结论，结尾带话题。',
+  校园海报: '校园海报以大字标题加一句副题为主，正文控制在三行以内，留出二维码位置。',
+  广播或宣讲: '口头表达要短句化，多用具体器物与场景作比喻，避免连续长句。'
+};
+
+function platformNote(platform) {
+  if (!platform) return '';
+  for (const [key, val] of Object.entries(PLATFORM_HINTS)) {
+    if (platform.includes(key)) return val;
+  }
+  return '';
+}
+
+/* -------------------------------------------------------------- 意图识别 */
+
+const INTENT_KEYWORDS = {
+  moderation: ['审核', '审一下', '审一遍', '审稿', '把关', '合规', '能不能发', '红线', '风险', '违规', '敏感', '被限流'],
+  quiz: ['竞赛', '题库', '出题', '答题', '试卷', '题目'],
+  activity: ['活动方案', '活动策划', '策划书', '团日', '进校园', '活动流程', '工作方案'],
+  slogan: ['标语', '口号', 'slogan', '宣传语', '一句话'],
+  poster: ['海报', '横幅', '展板', '主视觉'],
+  speech: ['讲稿', '宣讲', '微团课', '发言稿', '演讲', '主持词', '党课'],
+  brand_story: ['品牌故事', '老字号', '品牌历史', '沿革', '百年品牌', '创始'],
+  ich_copy: ['文案', '推文', '脚本', '短视频', '公众号', '科普', '宣传稿', '介绍文', '小红书'],
+  qa: ['什么是', '是什么', '有哪些', '为什么', '怎么', '如何', '介绍', '多少', '历史', '起源']
+};
+
+const INTENT_PRIORITY = ['moderation', 'quiz', 'activity', 'slogan', 'poster', 'speech', 'brand_story', 'ich_copy', 'qa'];
+
+const HELP_RE = /(你能做什么|能做什么|可以做什么|有什么功能|有哪些功能|怎么使用|如何使用|使用说明|功能介绍|你是谁|能帮我做什么)/;
+
+function detectIntent(message) {
+  const text = String(message || '');
+  const scores = {};
+  for (const [intent, words] of Object.entries(INTENT_KEYWORDS)) {
+    scores[intent] = words.reduce((sum, w) => sum + (text.includes(w) ? (w.length >= 3 ? 2 : 1) : 0), 0);
+  }
+  // 「给剪纸写一段文案」同时命中文案与对象，文案类意图优先于问答
+  const hit = INTENT_PRIORITY.find((i) => scores[i] > 0);
+  const intent = HELP_RE.test(text) ? 'help' : hit || 'qa';
+
+  const slots = {
+    platform: ['小红书', '公众号', '短视频', '抖音', '微博', '海报', '广播', 'B站'].find((p) => text.includes(p)) || '',
+    audience: ['青年学生', '大学生', '中学生', '小学生', '家长', '教师', '游客', '社区居民'].find((a) => text.includes(a)) || '',
+    length: text.includes('长') ? '较长' : text.includes('短') ? '精简' : '',
+    style: ['科普', '文艺', '活泼', '庄重', '青春', '通俗', '正式'].find((s) => text.includes(s)) || ''
+  };
+  return { intent, scores, slots };
+}
+
+const INTENT_KINDS = {
+  ich_copy: ['heritage', 'festival'],
+  brand_story: ['brand'],
+  speech: ['spirit', 'heritage'],
+  activity: ['festival', 'heritage', 'spirit'],
+  poster: ['heritage', 'brand', 'festival', 'spirit'],
+  quiz: ['heritage', 'brand', 'spirit', 'festival'],
+  qa: ['heritage', 'brand', 'spirit', 'festival'],
+  slogan: ['heritage', 'brand', 'spirit'],
+  moderation: []
+};
+
+// 低于该分数认为知识库没有对应条目，改为给出可选项而不强行生成
+const MIN_MATCH_SCORE = 8;
+// 高于该分数视为稳定命中，否则在结果前提示这是最接近的条目
+const STRONG_MATCH_SCORE = 25;
+
+function nameMatched(topic, result) {
+  if (!topic || !result) return false;
+  const t = String(topic).toLowerCase();
+  return t.includes(result.name.toLowerCase()) || (result.entry.aliases || []).some((a) => a && t.includes(a.toLowerCase()));
+}
+
+function selectEntries(topic, intent, limit = 3) {
+  const kinds = INTENT_KINDS[intent] || null;
+  const primary = search(topic, { limit: 8 });
+  const filtered = kinds ? primary.filter((r) => kinds.includes(r.kind)) : primary;
+  const list = (filtered.length ? filtered : primary).filter((r) => r.score >= MIN_MATCH_SCORE).slice(0, limit);
+  if (list.length) {
+    return {
+      entries: list.map((r) => r.entry),
+      top: list[0],
+      weak: !nameMatched(topic, list[0]) && list[0].score < STRONG_MATCH_SCORE
+    };
+  }
+  // 主题词落在价值观上时，按价值观取材
+  const valueHit = db.core.values.find((v) => topic && topic.includes(v.name));
+  if (valueHit) {
+    const byValue = db.entries.filter((e) => e.values.includes(valueHit.name)).slice(0, limit);
+    return { entries: byValue, top: byValue[0] ? { name: byValue[0].name, score: 0, entry: byValue[0] } : null, weak: false };
+  }
+  return { entries: [], top: null, weak: false };
+}
+
+/* --------------------------------------------------------------- 生成器 */
+
+function docTitle(entry, style) {
+  const base = entry.name;
+  if (style === '文艺') return `${base}：一门手艺的时间刻度`;
+  if (style === '青春') return `${base}，其实离我们很近`;
+  return `${base}｜${KIND_LABEL[entry.kind] || '文化'}入门与传播要点`;
+}
+
+function generateIchCopy(entry, params, rng) {
+  const platform = params.platform || '公众号';
+  const style = params.style || '科普';
+  const sections = [];
+
+  const hook = clip(entry.summary, 8, 20) || entry.name;
+  const lead = entry.summary || `${entry.name}是${entry.category}领域的重要代表。`;
+
+  if (platform === '短视频' || platform === '抖音') {
+    const shots = pickMany(rng, keyItems(entry, 9), 4);
+    sections.push({
+      heading: '分镜脚本',
+      table: {
+        columns: ['时间', '画面', '口播', '字幕'],
+        rows: [
+          ['0-3秒', `${entry.name}最具辨识度的画面或器物特写`, `先抛一个问题：${hook}？`, hook],
+          ...shots.map((s, i) => [
+            `${3 + i * 12}-${15 + i * 12}秒`,
+            i % 2 === 0 ? '工艺动作特写，手部特写为主' : '成品或使用场景',
+            s,
+            s.length > 14 ? `${s.slice(0, 13)}…` : s
+          ]),
+          ['结尾', '人物出镜或成品全景', `这就是${entry.name}，它还在继续。`, '关注我们，一起把传统讲给更多人听']
+        ]
+      }
+    });
+  } else if (platform === '小红书') {
+    sections.push({ heading: '标题建议', lines: [`${entry.name}｜${subtitleFor(entry)}`] });
+    sections.push({
+      heading: '正文',
+      lines: [
+        `先说结论：${lead}`,
+        '',
+        ...blockItems(entry, 0, 3).map((c) => `· ${c}`),
+        '',
+        ...blockItems(entry, 1, 2).map((c) => `· ${c}`),
+        '',
+        `我自己最被打动的一点是：${blockItems(entry, 1, 1)[0] || blockItems(entry, 0, 1)[0] || ''}`
+      ]
+    });
+  } else if (platform === '微博') {
+    const core = keyItems(entry, 1)[0] || '';
+    sections.push({
+      heading: '微博文案',
+      lines: [`【${entry.name}】${hook}。${core}${entry.era ? `这份技艺可以追溯到${entry.era}。` : ''}它不只是过去的记忆，今天依然有人在用手做。你身边还有哪些${entry.category}的场景？`]
+    });
+  } else if (platform === '校园海报') {
+    sections.push({
+      heading: '海报文案',
+      lines: [
+        `主标题：${entry.name}`,
+        `副标题：${subtitleFor(entry)}`,
+        ...keyItems(entry, 3).map((c, i) => `正文${'一二三'[i]}：${c.length > 24 ? `${c.slice(0, 23)}…` : c}`)
+      ]
+    });
+  } else {
+    sections.push({
+      heading: '导语',
+      lines: [
+        style === '文艺' ? `${clip(entry.summary, 8, 22) || hook}。先说它是什么，再说它为什么值得被记住。` : `${lead}`,
+        '',
+        `本文适合：${params.audience || '青年学生'}｜建议平台：${platform}`,
+        [entry.era && `时间坐标：${entry.era}`, entry.region && `地域：${entry.region}`].filter(Boolean).join('｜')
+      ]
+    });
+    const numerals = ['一', '二', '三'];
+    entry.blocks.slice(0, 3).forEach((b, i) => {
+      if (b.items.length) sections.push({ heading: `${numerals[i]}、${b.label}`, bullets: b.items });
+    });
+  }
+
+  const vals = valueRefs(entry);
+  if (vals.length) {
+    sections.push({
+      heading: '价值落点',
+      lines: [`讲${entry.name}时，可以自然落到${joinCn(vals.map((v) => v.name))}上，不必生硬贴标签。`, vals.map((v) => `· ${v.name}：${v.meaning}`).join('\n')]
+    });
+  }
+  sections.push({ heading: '怎么写更好', bullets: entry.writing.slice(0, 4), note: platformNote(platform) });
+  sections.push({ heading: '话题标签', lines: [`#${entry.name} #非遗 #中华优秀传统文化 #校园文化 ${entry.values.map((v) => `#${v}`).join(' ')}`] });
+
+  return {
+    title: docTitle(entry, style),
+    subtitle: `${KIND_LABEL[entry.kind]}｜${entry.category}｜面向${params.audience || '青年学生'}的${platform}文案`,
+    sections,
+    citations: [entry],
+    notes: entry.taboos.length ? [`表达禁忌：${entry.taboos.join('；')}`] : []
+  };
+}
+
+function generateBrandStory(entry, params, rng) {
+  const vals = valueRefs(entry);
+  const sections = [
+    {
+      heading: '一、源起',
+      lines: [`${entry.name}创立于${entry.era}，${entry.region ? `发端于${entry.region}，` : ''}创办人是${entry.raw.founder || '创始一代'}。`],
+      bullets: blockOf(entry, '品牌源起')
+    },
+    { heading: '二、技艺与品质', bullets: blockOf(entry, '技艺与品质') },
+    { heading: '三、文化价值', bullets: blockOf(entry, '文化价值') },
+    { heading: '四、当代传承', bullets: blockOf(entry, '当代传承') },
+    {
+      heading: '五、时代寄语',
+      lines: [
+        vals.length
+          ? `${entry.name}留下的不只是一门手艺，还有对${joinCn(vals.map((v) => v.name))}的具体回答。`
+          : `${entry.name}的故事说明，老品牌的生命力来自对技艺的坚持。`,
+        `讲给${params.audience || '青年学生'}听时，可以从「${pickDetail(rng, entry)}」这个细节切入，让抽象的精神落到可感知的动作上。`
+      ]
+    },
+    { heading: '撰写建议', bullets: entry.writing.slice(0, 4) }
+  ];
+  return {
+    title: `${entry.name}品牌故事（${params.style || '叙述'}版）`,
+    subtitle: `${entry.era}创立｜${entry.raw.industry || entry.category}｜中华老字号`,
+    sections,
+    citations: [entry],
+    notes: entry.taboos.length ? [`合规提示：${entry.taboos.join('；')}`] : []
+  };
+}
+
+function generatePoster(entry, params) {
+  const rng = rngFrom(seedOf(`${entry.name}-poster`));
+  const sub = subtitleFor(entry);
+  const vals = valueRefs(entry);
+  const core = keyItems(entry, 6);
+  const slogans = [
+    `让${entry.name}被更多人看见`,
+    `${entry.name}，值得被认真讲一次`,
+    `把${entry.name}讲给下一个人听`
+  ];
+  const body = core.filter((item) => !sub.includes(item.slice(0, 8)));
+  const palette = {
+    heritage: '主色建议朱红配米白，辅以墨色线条，纹样取自项目本身的造型元素',
+    brand: '主色建议取自品牌标志色，叠加旧纸质感底色，突出年代感',
+    spirit: '主色建议正红配暖金，版式端正，留出充足的庄重留白',
+    festival: '主色建议节令色系，圆润字体，加入节俗器物剪影'
+  };
+  return {
+    title: `${entry.name}｜宣传海报文案`,
+    subtitle: `${params.size || '竖版 1080×1920'}｜面向${params.audience || '青年学生'}`,
+    sections: [
+      { heading: '文案结构', lines: [`主标题（大字）：${entry.name}`, `副标题（中字）：${sub}`, `核心标语：${pick(rng, slogans)}`] },
+      { heading: '正文（三行，小字）', lines: (body.length >= 3 ? body : core).slice(0, 3).map((c, i) => `${i + 1}. ${c.length > 26 ? `${c.slice(0, 25)}…` : c}`) },
+      { heading: '行动号召', lines: [pick(rng, [`扫码参与线上非遗知识竞答`, `转发并写下你家乡的${entry.name}记忆`, `报名参加本周的手作体验课`, `点击链接进入文化知识库`])] },
+      { heading: '视觉呈现建议', lines: [palette[entry.kind] || palette.heritage, `构图：标题占上部三分之一，主体图像居中，正文与二维码位于下部，边距不小于正文高度的一半`, `元素：可提取${entry.keywords.slice(0, 3).join('、')}作为视觉线索`] },
+      { heading: '备选标语', bullets: slogans }
+    ],
+    citations: [entry],
+    notes: ['海报使用传承人肖像、作品图像、品牌标识前须确认授权。']
+  };
+}
+
+function generateSlogans(entry, params) {
+  const name = entry.name;
+  const kw = entry.keywords.filter((k) => k !== name).slice(0, 3);
+  const groups = {
+    庄重: [
+      `守正创新，让${name}在校园里被看见`,
+      `${name}：传承不是复刻，是被继续使用`,
+      `把${name}讲清楚，是最实在的文化自信`
+    ],
+    青春: [
+      `这一届年轻人，正在把${name}做得挺酷`,
+      `${name}不古板，它只是还没等到会讲它的人`,
+      `带上${name}，去过你的大学四年`
+    ],
+    简短: [
+      `${name}，值得被看见`,
+      `见${name}，见中国`,
+      `${kw[0] || '老手艺'}，新表达`,
+      `今天，为${name}留一分钟`
+    ]
+  };
+  return {
+    title: `${name}｜宣传标语备选`,
+    subtitle: `按使用场合分三类，每条控制在二十字以内`,
+    sections: Object.entries(groups).map(([heading, lines]) => ({ heading: `${heading}类`, lines: lines.map((l) => `· ${l}`) })),
+    citations: [entry],
+    notes: [`标语可搭配项目关键词使用：${kw.join('、')}`]
+  };
+}
+
+function generateSpeech(entry, params) {
+  const vals = valueRefs(entry);
+  const core = blockOf(entry, '核心特征');
+  const culture = blockOf(entry, '文化内涵');
+  const today = blockOf(entry, '当代传承');
+  const opening = clip(entry.summary, 8, 22) || entry.name;
+  const lines = [
+    `各位同学，大家好。今天我想先问一个问题：${opening}，这件事和你有什么关系？`,
+    '',
+    `我用三分钟讲清三件事：它是什么，它为什么重要，我们今天能做什么。`,
+    '',
+    `第一件事，它是什么。${entry.summary}`,
+    core[0] ? `具体来说，${core[0]}。` : '',
+    core[1] ? `还有一个细节常被忽略：${core[1]}。` : '',
+    '',
+    `第二件事，它为什么重要。`,
+    ...culture.slice(0, 3).map((c) => `${c}。`),
+    vals.length ? `这些内容落到价值上，就是${vals.map((v) => v.name).join('、')}。${vals[0].meaning}` : '',
+    '',
+    `第三件事，我们今天能做什么。`,
+    ...today.slice(0, 3).map((t) => `${t}。`),
+    '',
+    `我不主张每个人都去学一门手艺，那不现实。但有三件事成本很低：把它讲清楚，把它用起来，把它传下去。`,
+    '',
+    `讲清楚，就是在朋友圈、在班会上、在社团招新时说对它是什么。用起来，就是让${entry.name}出现在你能触达的场景里。传下去，就是从身边一个人开始。`,
+    '',
+    `文化自信不是一句口号，它是你说到自己文化时那种熟悉和踏实的语气。谢谢大家。`
+  ].filter((l) => l !== '');
+  return {
+    title: `${entry.name}｜微团课宣讲稿`,
+    subtitle: `约${lines.join('').length}字｜时长约${Math.max(3, Math.round(lines.join('').length / 220))}分钟｜面向${params.audience || '青年学生'}`,
+    sections: [{ heading: '讲稿正文', lines }],
+    citations: [entry],
+    notes: ['文中事实均来自本地知识库，宣讲前建议核对最新官方口径。']
+  };
+}
+
+function generateActivity(entry, params) {
+  const scene = db.core.scenes.find((s) => s.name === params.scene) || db.core.scenes[1];
+  const vals = valueRefs(entry);
+  const core = blockOf(entry, '核心特征');
+  const rows = [
+    ['14:00-14:10', '开场', '主持人介绍活动主题与嘉宾', '主持词', '主持人'],
+    ['14:10-14:40', '文化讲解', `围绕${entry.name}讲清由来、技艺与文化内涵`, '讲解词', '文化讲解员'],
+    ['14:40-15:20', '动手体验', `分组体验与${entry.name}相关的手作环节`, '体验物料与安全提示', '志愿者'],
+    ['15:20-15:40', '交流分享', '每组派代表分享作品与感受', '记录表', '主持人'],
+    ['15:40-16:00', '价值升华', vals.length ? `结合${vals.map((v) => v.name).join('、')}谈当代传承` : '谈文化传承的当代意义', '微团课讲稿', '学生代表'],
+    ['16:00-16:30', '成果展示', '作品陈列与合影，发布新媒体内容', '海报文案', '宣传组']
+  ];
+  return {
+    title: `${entry.name}进校园活动方案`,
+    subtitle: `场景：${scene.name}｜面向${params.audience || '全校学生'}｜建议规模60至120人`,
+    sections: [
+      { heading: '一、活动背景与目的', lines: [scene.pain ? `当前痛点：${scene.pain}` : '', `${scene.solution}`, `本次以${entry.name}为切口，让参与者在一节课的时间里完成从知道到了解的转变。`].filter(Boolean) },
+      { heading: '二、活动主题', lines: [`主标题：${entry.name}，就在我们身边`, `副标题：${subtitleFor(entry)}`] },
+      { heading: '三、时间与地点', lines: ['建议时间：下午两点至四点三十分，避开课程高峰', '建议地点：学生活动中心或图书馆报告厅，需要可投屏与桌椅灵活调整的场地', '参与对象：全校学生，鼓励社团与班级集体报名'] },
+      { heading: '四、流程安排', table: { columns: ['时间', '环节', '内容', '物料', '负责人'], rows } },
+      { heading: '五、物料清单', bullets: [`体验材料：${entry.category}相关手作物料（如${kwOf(entry)}），按人数多备百分之十`, '宣传物料：主视觉海报、易拉宝、报名二维码', '记录物料：签到表、作品标签、满意度问卷', '数字物料：现场照片与短视频素材机位安排'] },
+      { heading: '六、人员分工', bullets: ['统筹组：一人负责总协调与时间控制', '内容组：两人负责讲解词与问答准备，可使用本智能体生成的讲稿', '执行组：四至六人负责签到、物料、体验指导', '宣传组：两人负责摄影摄像与新媒体发布'] },
+      { heading: '七、宣传方案', bullets: [`预热：活动前五天发布推文，标题可用「${entry.name}，其实离我们很近」`, '报名：班级群与社团群同步，设置限额提高完成率', '现场：实时发布图文，带上话题标签', '复盘：活动后两天内发布成果推文，附问卷结果'] },
+      { heading: '八、内容合规提示', bullets: [...entry.taboos, '涉及传承人肖像与作品图像须取得授权', '不使用绝对化宣传用语，不将民俗包装为迷信'] },
+      { heading: '九、预期成效', bullets: [`覆盖${scene.name}场景的核心人群，产出内容素材不少于十条`, '形成可复用的讲解词与体验课流程，下学期可直接沿用', vals.length ? `在${vals.map((v) => v.name).join('、')}等价值维度上形成可讲述的具体案例` : '形成可讲述的文化传承案例'] }
+    ],
+    citations: [entry],
+    notes: []
+  };
+}
+
+function generateQuiz(entry, params) {
+  const others = db.entries.filter((e) => e.id !== entry.id && e.kind === entry.kind);
+  const rng = rngFrom(seedOf(`quiz-${entry.id}`));
+  const wrongCats = db.entries.filter((e) => e.category !== entry.category).map((e) => e.category);
+  const distractor = pick(rng, [...new Set(wrongCats)]);
+  const items = [
+    { type: '单选', q: `${entry.name}属于下列哪一类？`, options: [entry.category, distractor, '传统医药', '曲艺'].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4), answer: entry.category, note: `${entry.name}的类别为${entry.category}。` },
+    { type: '判断', q: `${entry.name}是${KIND_LABEL[entry.kind]}领域的代表性项目。`, options: ['正确', '错误'], answer: '正确', note: entry.level ? `该项目级别为${entry.level}。` : '属于该领域代表性项目。' },
+    entry.year
+      ? { type: '填空', q: `${entry.name}的相关入选或创立年份是______年。`, answer: String(entry.year), note: `${entry.era}。` }
+      : null,
+    { type: '多选', q: `关于${entry.name}，下列说法正确的有？`, options: [...pickMany(rng, blockOf(entry, '核心特征').concat(blockOf(entry, '文化内涵')), 3).map((s) => s.slice(0, 30)), `它完全依赖机器批量生产`], answer: '前三项', note: '手工技艺是核心，批量机器生产不属于其技艺特征。' },
+    { type: '单选', q: `${entry.name}最容易被误解的一点是？`, options: ['认为它只是过去的记忆', '认为它不可学习', '认为它与生活无关', '以上都是'], answer: '以上都是', note: '把传统等同于过时，是最常见的误解。' },
+    { type: '多选', q: `下列哪些做法有助于${entry.name}的传播？`, options: ['在校内开展体验活动', '用短视频讲清一个知识点', '与文创设计结合', '只在专业圈内讨论'], answer: '前三项', note: '面向大众的表达才能扩大受众。' },
+    { type: '填空', q: `${entry.name}对应的社会主义核心价值观可以落在______等词上。`, answer: entry.values.join('、'), note: '价值落点应与内容自然结合，避免生硬贴标签。' },
+    { type: '判断', q: `宣传${entry.name}时可以使用最好、第一等表述来增强效果。`, options: ['正确', '错误'], answer: '错误', note: '绝对化用语不符合广告法要求，也容易损害公信力。' },
+    entry.taboos.length
+      ? { type: '判断', q: `在${entry.name}的宣传中，${entry.taboos[0]}是需要注意的问题。`, options: ['正确', '错误'], answer: '正确', note: '这是该项目在传播中常见的表达风险。' }
+      : { type: '简答', q: `请用两句话向中学生介绍${entry.name}。`, answer: '言之成理即可', note: '参考答案可结合核心特征与文化内涵。' },
+    { type: '单选', q: `${entry.name}所属地域是？`, options: [entry.region || entry.region === '' ? entry.region : '全国', pick(rng, others)?.region || '江南', '西北地区', '东北地区'].filter((v, i, a) => v && a.indexOf(v) === i).slice(0, 4), answer: entry.region || '全国', note: `该项目的流布地域为${entry.region || '全国'}。` }
+  ].filter(Boolean).slice(0, 10);
+
+  return {
+    title: `${entry.name}｜知识竞赛题库（10题）`,
+    subtitle: `题型覆盖单选、多选、判断、填空，可直接用于班会与社团活动`,
+    sections: items.map((item, i) => ({
+      heading: `第${i + 1}题（${item.type}）`,
+      lines: [item.q, ...(item.options || []).map((o, oi) => `${'ABCD'[oi]}. ${o}`), `答案：${item.answer}`, `解析：${item.note}`]
+    })),
+    citations: [entry],
+    notes: ['答案与解析均基于本地知识库，出题后建议人工复核一次。']
+  };
+}
+
+/* ---------------------------------------------------------------- 渲染 */
+
+function toMarkdown(doc) {
+  const out = [`# ${doc.title}`];
+  if (doc.subtitle) out.push(`> ${doc.subtitle}`);
+  for (const section of doc.sections) {
+    out.push('', `## ${section.heading}`);
+    if (section.table) {
+      out.push('', `| ${section.table.columns.join(' | ')} |`, `| ${section.table.columns.map(() => '---').join(' | ')} |`);
+      for (const row of section.table.rows) out.push(`| ${row.join(' | ')} |`);
+    }
+    for (const line of section.lines || []) out.push(line);
+    for (const bullet of section.bullets || []) out.push(`- ${bullet}`);
+    if (section.note) out.push('', `> ${section.note}`);
+  }
+  if (doc.notes?.length) {
+    out.push('', '## 使用提示');
+    for (const n of doc.notes) out.push(`- ${n}`);
+  }
+  if (doc.citations?.length) {
+    out.push(
+      '',
+      '## 引用来源',
+      doc.citations
+        .map((c) => {
+          const level = c.level && c.level !== KIND_LABEL[c.kind] ? `｜${c.level}` : '';
+          return `- ${c.name}（${KIND_LABEL[c.kind]}｜${c.category}${level}）`;
+        })
+        .join('\n')
+    );
+  }
+  return out.join('\n');
+}
+
+/**
+ * 生成结构化文档。优先调用大模型，未配置或调用失败时回落到本地引擎。
+ */
+async function generate({ type = 'ich_copy', topic = '', params = {}, llmOverride }) {
+  const intent = type === 'auto' ? detectIntent(topic).intent : type;
+  const picked = selectEntries(topic || params.scene || '', intent, 3);
+  const entries = picked.entries;
+  const entry = entries[0] || null;
+  const usedLlm = isConfigured(llmOverride);
+  let llmError = null;
+
+  if (usedLlm && entry) {
+    try {
+      const messages = buildMessages({ intent, topic: entry.name, params, entries });
+      const { text, model } = await chat(messages, { override: llmOverride });
+      const report = check(text);
+      return {
+        mode: 'llm',
+        model,
+        intent,
+        taskLabel: TASK_LABELS[intent] || intent,
+        title: `${entry.name}｜${TASK_LABELS[intent] || '内容生成'}`,
+        markdown: picked.weak ? `${disclosure(topic, entry)}\n\n${text}` : text,
+        citations: entries.map((e) => citeOf(e)),
+        moderation: report
+      };
+    } catch (err) {
+      // 落到本地引擎
+      llmError = err.message;
+    }
+  }
+
+  if (!entry) {
+    const suggestions = catalog()
+      .slice(0, 12)
+      .map((e) => e.name);
+    return {
+      mode: 'local',
+      intent,
+      taskLabel: TASK_LABELS[intent] || intent,
+      title: '需要先确定主题对象',
+      markdown: [
+        `# 需要先确定主题对象`,
+        '',
+        `没有在本地知识库中找到「${topic}」这一对象，所以没有直接生成内容，避免出现事实性错误。`,
+        '',
+        '## 你可以这样使用',
+        '- 换一个知识库中已有的对象名称，例如下面的条目',
+        '- 或者在创建内容时把主题写得更完整，比如「为剪纸写一篇公众号科普文案」',
+        '',
+        '## 知识库中可用的部分条目',
+        suggestions.map((s) => `- ${s}`).join('\n')
+      ].join('\n'),
+      citations: [],
+      moderation: { level: 'pass', status: '通过', passed: true, findings: [], positives: [], negatives: [], footer: db.moderation.compliantFooter }
+    };
+  }
+
+  const rng = rngFrom(seedOf(`${intent}-${entry.id}-${JSON.stringify(params)}`));
+  const builders = {
+    ich_copy: generateIchCopy,
+    brand_story: generateBrandStory,
+    poster: generatePoster,
+    slogan: generateSlogans,
+    speech: generateSpeech,
+    activity: generateActivity,
+    quiz: generateQuiz
+  };
+  const builder = builders[intent] || generateIchCopy;
+  const doc = builder(entry, params, rng);
+  const raw = picked.weak ? `${disclosure(topic, entry)}\n\n${toMarkdown(doc)}` : toMarkdown(doc);
+  const cleaned = sanitize(raw);
+  const report = check(cleaned.text, { strict: true });
+  const finalText = report.level === 'block' ? '' : cleaned.text;
+
+  return {
+    mode: 'local',
+    llmError,
+    intent,
+    taskLabel: TASK_LABELS[intent] || intent,
+    title: doc.title,
+    markdown: finalText,
+    rewrites: cleaned.changes,
+    citations: entries.map((e) => citeOf(e)),
+    moderation: report
+  };
+}
+
+function disclosure(topic, entry) {
+  return `> 提示：知识库中没有直接收录「${String(topic).slice(0, 20)}」，以下内容依据最接近的条目「${entry.name}」生成，发布前请核对事实与最新官方口径。`;
+}
+
+/** 从技艺与品质、文化价值中挑一条足够短、适合口头切入的细节。 */
+function pickDetail(rng, entry) {
+  const pool = [...blockOf(entry, '技艺与品质'), ...blockOf(entry, '文化价值')].filter(
+    (item) => String(item).split(/[，。；、]/)[0].trim().length <= 14
+  );
+  const source = pool.length ? pool : [...blockOf(entry, '技艺与品质'), '一道工序'];
+  return shortDetail(pick(rng, source), 14) || '一道工序';
+}
+
+/* ---------------------------------------------------------------- 问答 */
+
+function composeQa(message, results, slots) {
+  if (!results.length) {
+    const guess = search(message, { limit: 4 }).map((r) => r.name);
+    return {
+      title: '没有找到直接匹配的条目',
+      markdown: [
+        '# 没有找到直接匹配的条目',
+        '',
+        '本地知识库暂时没有与这个问题直接对应的内容，为避免给出不准确的说法，这里不强行作答。',
+        '',
+        guess.length ? `## 你可能想问的是\n${guess.map((g) => `- ${g}`).join('\n')}` : '',
+        '',
+        '## 建议',
+        '- 换成知识库中已有的对象名称提问',
+        '- 或者补充限定条件，例如「剪纸的技艺特点有哪些」「适合做成短视频的红色文化选题」'
+      ].join('\n'),
+      citations: []
+    };
+  }
+
+  const top = results[0];
+  const entry = top.entry;
+  const meta = [
+    KIND_LABEL[entry.kind],
+    entry.category,
+    entry.level && entry.level !== KIND_LABEL[entry.kind] ? entry.level : '',
+    entry.era,
+    entry.region
+  ].filter(Boolean);
+  const lines = [`# ${entry.name}`, `> ${meta.join('｜')}`, ''];
+  lines.push('## 直接结论', entry.summary, '');
+
+  for (const block of entry.blocks.slice(0, 3)) {
+    lines.push(`## ${block.label}`);
+    for (const item of block.items.slice(0, 4)) lines.push(`- ${item}`);
+    lines.push('');
+  }
+
+  const vals = valueRefs(entry);
+  if (vals.length) {
+    lines.push('## 可以怎么讲', `这条内容的价值落点可以放在${joinCn(vals.map((v) => v.name))}上。${vals[0].meaning}`);
+    if (entry.writing.length) lines.push('', ...entry.writing.slice(0, 3).map((w) => `- ${w}`));
+    lines.push('');
+  }
+
+  if (results.length > 1) {
+    lines.push('## 相关知识库条目');
+    for (const r of results.slice(1)) lines.push(`- ${r.name}（${KIND_LABEL[r.kind]}｜${r.category}）：${r.snippet}`);
+    lines.push('');
+  }
+
+  if (entry.taboos.length) {
+    lines.push('## 表达注意', ...entry.taboos.map((t) => `- ${t}`));
+  }
+
+  return { title: entry.name, markdown: lines.filter((l) => l !== undefined).join('\n'), citations: results.map((r) => citeOf(r.entry)) };
+}
+
+const GREETING_RE = /^(你?好|您好|hi|hello|hey|在吗|在么|您好呀)[!！。~\s]*$/i;
+
+const KIND_QUERY = [
+  [/(传统节日|传统节令|节日)/, 'festival'],
+  [/(非遗|非物质文化遗产)/, 'heritage'],
+  [/(老字号|百年品牌|百年老店)/, 'brand'],
+  [/(红色|革命|精神谱系|先进文化)/, 'spirit']
+];
+
+/** 概览类问题：列出该类别下的全部条目 */
+function catalogDoc(kind) {
+  const list = db.entries.filter((e) => e.kind === kind);
+  const shown = list.slice(0, 12);
+  return {
+    title: `${KIND_LABEL[kind]}知识库（共 ${list.length} 条）`,
+    markdown: [
+      `# ${KIND_LABEL[kind]}知识库`,
+      `> 本地知识库共收录 ${list.length} 条${KIND_LABEL[kind]}相关内容`,
+      '',
+      ...shown.map((e) => `## ${e.name}\n${e.summary}`),
+      shown.length < list.length ? `\n> 另有 ${list.length - shown.length} 条未展开，可以直接提问具体名称。` : '',
+      '',
+      '## 可以继续这样问',
+      ...shown.slice(0, 4).map((e) => `- ${e.name}的技艺特点有哪些`)
+    ]
+      .filter(Boolean)
+      .join('\n'),
+    citations: []
+  };
+}
+
+function helpDoc() {
+  return {
+    title: `你好，我是${AGENT_PERSONA}`,
+    markdown: [
+      `# 你好，我是${AGENT_PERSONA}`,
+      '> 校园文化AIGC智能体｜非物质文化遗产与中华老字号宣传推广',
+      '',
+      '## 我能做什么',
+      '- 文化知识问答：非遗项目、老字号、革命文化与先进文化、传统节日的知识解答，答案带来源条目',
+      '- 非遗介绍文案：按公众号、小红书、短视频、微博、校园海报等平台分别成稿',
+      '- 老字号品牌故事：按源起、技艺、文化、传承、寄语五段结构撰写',
+      '- 宣传海报文案：主标题、标语、正文、行动号召与视觉建议一次给全',
+      '- 校园活动方案：流程表、物料、分工、宣传与合规提示',
+      '- 宣讲稿与微团课：可直接照读的口语化讲稿',
+      '- 知识竞赛题库：单选、多选、判断、填空各题型，含答案解析',
+      '',
+      '## 直接这样说就行',
+      '- 剪纸的技艺特点有哪些',
+      '- 为同仁堂写一篇朋友圈风格的品牌故事',
+      '- 给我一条端午节海报文案',
+      '- 设计一个非遗进校园的活动方案',
+      '- 帮我出一套二十四节气的知识竞赛题',
+      '',
+      `## 已加载的知识库\n${Object.entries({ heritage: '非物质文化遗产', brand: '中华老字号', spirit: '革命文化与先进文化', festival: '传统节日' }).map(([k, v]) => `- ${v} ${db.stats[k]} 条`).join('\n')}，社会主义核心价值观 ${db.stats.values} 项，应用场景 ${db.stats.scenes} 个，审核规则 ${db.stats.moderationRules} 条。`
+    ].join('\n'),
+    citations: []
+  };
+}
+
+/**
+ * 对话入口。
+ */
+async function answer({ message = '', history = [], llmOverride, forceIntent }) {
+  const text = String(message).trim();
+  const { intent: guessed, slots } = detectIntent(text);
+  const intent = forceIntent || guessed;
+
+  if (!text || GREETING_RE.test(text)) {
+    const doc = helpDoc();
+    return { mode: 'local', intent: 'help', taskLabel: '使用引导', ...doc, moderation: check(doc.markdown), slots };
+  }
+  if (intent === 'help') {
+    const doc = helpDoc();
+    return { mode: 'local', intent, taskLabel: '使用引导', ...doc, moderation: check(doc.markdown), slots };
+  }
+  if (intent === 'moderation') {
+    const report = check(text);
+    const doc = {
+      title: '内容审核结果',
+      markdown: ['# 内容审核结果', `> 结论：${report.status}`, '', describe(report), '', '## 说明', report.footer].join('\n'),
+      citations: []
+    };
+    return { mode: 'local', intent, taskLabel: '内容合规审核', ...doc, moderation: report, slots };
+  }
+
+  // 概览类问题（「传统节日有哪些」）走目录回答，而不是强行匹配单个条目
+  const listLike = /(有哪些|都有哪些|都有什么|都有啥|包括哪些|有哪些内容|概览|全部内容)/.test(text);
+  if (listLike && (intent === 'qa' || intent === 'brand_story')) {
+    const kind = KIND_QUERY.find(([re]) => re.test(text))?.[1];
+    if (kind) {
+      const doc = catalogDoc(kind);
+      return { mode: 'local', intent, taskLabel: `${KIND_LABEL[kind]}概览`, ...doc, moderation: check(doc.markdown), slots };
+    }
+  }
+
+  const useLlm = isConfigured(llmOverride);
+  if (useLlm && intent === 'qa') {
+    const entries = selectEntries(text, 'qa', 4).entries;
+    if (entries.length) {
+      try {
+        const messages = buildMessages({ intent: 'qa', topic: text, params: slots, entries, history });
+        const { text: generated, model } = await chat(messages, { override: llmOverride });
+        const report = check(generated);
+        return {
+          mode: 'llm',
+          model,
+          intent,
+          taskLabel: TASK_LABELS.qa,
+          title: '文化知识问答',
+          markdown: generated,
+          citations: entries.map((e) => citeOf(e)),
+          moderation: report,
+          slots
+        };
+      } catch {
+        /* 回落本地 */
+      }
+    }
+  }
+
+  if (intent === 'qa') {
+    const results = search(text, { limit: 4 }).filter((r) => r.score >= MIN_MATCH_SCORE);
+    const doc = composeQa(text, results, slots);
+    const report = check(doc.markdown);
+    return { mode: 'local', intent, taskLabel: '文化知识问答', ...doc, moderation: report, slots };
+  }
+
+  const doc = await generate({ type: intent, topic: text, params: slots, llmOverride });
+  return { ...doc, slots };
+}
+
+/* 华韵数智 · 前端逻辑（无框架，零依赖，纯前端） */
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+const state = {
+  user: null,
+  llm: JSON.parse(localStorage.getItem('huayun.llm') || 'null'),
+  history: [],
+  lastResult: '',
+  lastTitle: 'huayun-content'
+};
+
+/* ------------------------------------------------------------ 基础工具 */
+
+function toast(text, ms = 2200) {
+  const el = $('#toast');
+  el.textContent = text;
+  el.hidden = false;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => {
+    el.hidden = true;
+  }, ms);
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+}
+
+function inline(text) {
+  return escapeHtml(text)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
+/** 轻量 Markdown 渲染：标题、引用、列表、表格、粗体。 */
+function renderMarkdown(src) {
+  const lines = String(src || '').split('\n');
+  const out = [];
+  let listBuffer = null;
+  let tableBuffer = null;
+
+  const flushList = () => {
+    if (listBuffer) {
+      out.push(`<ul>${listBuffer.map((li) => `<li>${inline(li)}</li>`).join('')}</ul>`);
+      listBuffer = null;
+    }
+  };
+  const flushTable = () => {
+    if (!tableBuffer) return;
+    const [head, ...rows] = tableBuffer;
+    out.push(
+      `<table><thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join('')}</tr></thead><tbody>${rows
+        .map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`)
+        .join('')}</tbody></table>`
+    );
+    tableBuffer = null;
+  };
+  const cells = (line) =>
+    line
+      .trim()
+      .replace(/^\|/, '')
+      .replace(/\|$/, '')
+      .split('|')
+      .map((c) => c.trim());
+
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, '');
+    if (/^\|.*\|$/.test(line.trim())) {
+      const parts = cells(line);
+      if (parts.every((p) => /^:?-{2,}:?$/.test(p))) continue;
+      flushList();
+      if (!tableBuffer) tableBuffer = [];
+      tableBuffer.push(parts);
+      continue;
+    }
+    flushTable();
+    if (/^###\s+/.test(line)) {
+      flushList();
+      out.push(`<h3>${inline(line.replace(/^###\s+/, ''))}</h3>`);
+    } else if (/^##\s+/.test(line)) {
+      flushList();
+      out.push(`<h2>${inline(line.replace(/^##\s+/, ''))}</h2>`);
+    } else if (/^#\s+/.test(line)) {
+      flushList();
+      out.push(`<h1>${inline(line.replace(/^#\s+/, ''))}</h1>`);
+    } else if (/^>\s?/.test(line)) {
+      flushList();
+      out.push(`<blockquote>${inline(line.replace(/^>\s?/, ''))}</blockquote>`);
+    } else if (/^[-*]\s+/.test(line)) {
+      if (!listBuffer) listBuffer = [];
+      listBuffer.push(line.replace(/^[-*]\s+/, ''));
+    } else if (line.trim() === '') {
+      flushList();
+    } else {
+      flushList();
+      out.push(`<p>${inline(line)}</p>`);
+    }
+  }
+  flushList();
+  flushTable();
+  return out.join('');
+}
+
+function setLastResult(markdown, title) {
+  state.lastResult = markdown || '';
+  state.lastTitle = (title || 'huayun-content').replace(/[\\/:*?"<>|\s]+/g, '-').slice(0, 40);
+  $('#result-copy').disabled = !state.lastResult;
+  $('#result-download').disabled = !state.lastResult;
+}
+
+/* ------------------------------------------------------------ 登录 */
+
+function showApp(user) {
+  state.user = user;
+  $('#gate').hidden = true;
+  $('#app').hidden = false;
+  loadLibraryOptions();
+  loadStats();
+  greet();
+}
+
+$('#login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const hint = $('#gate-hint');
+  try {
+    const data = login($('#login-user').value.trim(), $('#login-pass').value);
+    if (!data.ok) throw new Error(data.error || '登录失败');
+    hint.classList.remove('is-error');
+    showApp(data.user);
+  } catch (err) {
+    hint.textContent = err.message;
+    hint.classList.add('is-error');
+  }
+});
+
+$('#guest-btn').addEventListener('click', () => {
+  logout();
+  showApp({ displayName: '游客体验', role: 'guest' });
+  toast('已进入游客体验模式，功能与正式账号一致');
+});
+
+$('#logout-btn').addEventListener('click', () => {
+  state.user = null;
+  logout();
+  $('#app').hidden = true;
+  $('#gate').hidden = false;
+});
+
+/* ------------------------------------------------------------ 导航 */
+
+$$('.nav-item[data-view]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const view = btn.dataset.view;
+    $$('.nav-item[data-view]').forEach((b) => b.classList.toggle('is-active', b === btn));
+    $$('.view').forEach((v) => v.classList.toggle('is-active', v.id === `view-${view}`));
+  });
+});
+
+/* ------------------------------------------------------------ 智能问答 */
+
+const SAMPLE_PROMPTS = [
+  '剪纸的技艺特点有哪些',
+  '什么是二十四节气',
+  '为我写一篇同仁堂的品牌故事',
+  '给我一条端午节的宣传标语',
+  '设计一个非遗进校园的活动方案',
+  '出一套关于二十四节气的知识竞赛题',
+  '长征精神的核心内涵是什么',
+  '胡庆余堂的戒欺匾体现了什么价值'
+];
+
+function bubble(role, html, tags = []) {
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+  const tagsHtml = tags.length ? `<div class="msg-tags">${tags.map((t) => `<span class="tagline ${t.tone || ''}">${escapeHtml(t.text)}</span>`).join('')}</div>` : '';
+  wrap.innerHTML = `<div class="avatar">${role === 'agent' ? '韵' : '我'}</div><div class="bubble">${tagsHtml}${html}</div>`;
+  $('#chat-scroll').appendChild(wrap);
+  $('#chat-scroll').scrollTop = $('#chat-scroll').scrollHeight;
+  return wrap;
+}
+
+function citationTags(result) {
+  const tags = [{ text: result.taskLabel || '内容生成' }];
+  if (result.mode === 'llm') tags.push({ text: `大模型模式 · ${result.model || ''}`, tone: 'ok' });
+  else tags.push({ text: '本地知识库引擎', tone: '' });
+  const level = result.moderation?.level;
+  if (level === 'warn') tags.push({ text: '审核：需注意表述', tone: 'warn' });
+  else if (level === 'block') tags.push({ text: '审核：命中红线', tone: 'warn' });
+  else tags.push({ text: '审核：通过', tone: 'ok' });
+  return tags;
+}
+
+function renderRail(result) {
+  const rail = $('#rail-citations');
+  rail.innerHTML = '';
+  if (result.citations?.length) {
+    for (const c of result.citations) {
+      const div = document.createElement('div');
+      div.className = 'cite';
+      div.innerHTML = `<strong>${escapeHtml(c.name)}</strong><span>${escapeHtml(c.kindLabel || c.category || '')}</span>`;
+      rail.appendChild(div);
+    }
+  } else {
+    rail.innerHTML = '<p class="rail-empty">本次结果未引用知识库条目。</p>';
+  }
+
+  const audit = $('#rail-audit');
+  const report = result.moderation;
+  if (!report) {
+    audit.innerHTML = '<p class="rail-empty">暂无审核信息。</p>';
+  } else {
+    audit.innerHTML = `<div class="verdict ${report.level}">${escapeHtml(report.status)}</div>
+      ${
+        report.findings?.length
+          ? report.findings
+              .map(
+                (f) =>
+                  `<div class="finding ${f.level}"><h5>${escapeHtml(f.category)}</h5><p>命中：${escapeHtml(f.terms.join('、'))}</p><p>${escapeHtml(f.advice)}</p></div>`
+              )
+              .join('')
+          : '<p class="rail-empty">未发现风险表述。</p>'
+      }`;
+  }
+
+  const values = new Set();
+  (result.citations || []).forEach((c) => (c.values || []).forEach((v) => values.add(v)));
+  $('#rail-values').innerHTML = values.size ? [...values].map((v) => `<span class="vchip">${escapeHtml(v)}</span>`).join('') : '<p class="rail-empty">未关联价值观标签。</p>';
+}
+
+async function sendMessage(text) {
+  if (!text.trim()) return;
+  bubble('user', escapeHtml(text));
+  const pending = bubble('agent', '<div class="typing"><span></span><span></span><span></span></div>');
+  $('#chat-send').disabled = true;
+  try {
+    const history = state.history.slice(-8);
+    state.history.push({ role: 'user', content: text });
+    const result = await answer({ message: text, history, llmOverride: state.llm || undefined });
+    pending.remove();
+    bubble('agent', renderMarkdown(result.markdown), citationTags(result));
+    state.history.push({ role: 'assistant', content: result.markdown });
+    setLastResult(result.markdown, result.title);
+    renderRail(result);
+  } catch (err) {
+    pending.remove();
+    bubble('agent', `<p style="color:#b5342b">生成失败：${escapeHtml(err.message)}</p>`);
+  } finally {
+    $('#chat-send').disabled = false;
+  }
+}
+
+function greet() {
+  $('#chat-scroll').innerHTML = '';
+  $('#chat-chips').innerHTML = SAMPLE_PROMPTS.map((p) => `<button class="chip" type="button">${escapeHtml(p)}</button>`).join('');
+  $$('#chat-chips .chip').forEach((c) =>
+    c.addEventListener('click', () => {
+      $('#chat-input').value = c.textContent;
+      sendMessage(c.textContent);
+    })
+  );
+  sendMessage('你好');
+}
+
+$('#chat-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const value = $('#chat-input').value;
+  $('#chat-input').value = '';
+  $('#chat-input').style.height = 'auto';
+  sendMessage(value);
+});
+
+$('#chat-input').addEventListener('input', (e) => {
+  e.target.style.height = 'auto';
+  e.target.style.height = `${Math.min(140, e.target.scrollHeight)}px`;
+});
+
+$('#chat-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    $('#chat-form').dispatchEvent(new Event('submit', { cancelable: true }));
+  }
+});
+
+$('#chat-clear').addEventListener('click', () => {
+  state.history = [];
+  greet();
+});
+
+/* ------------------------------------------------------------ 文案工坊 */
+
+const TYPE_TITLES = {
+  ich_copy: '非遗文案',
+  brand_story: '品牌故事',
+  poster: '海报文案',
+  activity: '活动方案',
+  slogan: '宣传标语',
+  speech: '宣讲稿',
+  quiz: '知识竞赛'
+};
+
+$('#gen-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const topic = $('#gen-topic').value.trim();
+  if (!topic) return;
+  const type = $('#gen-type').value;
+  const body = $('#result-body');
+  const meta = $('#result-meta');
+  meta.textContent = '正在生成……';
+  body.innerHTML = '<div class="empty"><p>正在检索知识库并生成内容……</p></div>';
+  $('#gen-submit').disabled = true;
+  try {
+    const result = await generate({
+      type,
+      topic,
+      params: {
+        platform: $('#gen-platform').value,
+        audience: $('#gen-audience').value,
+        style: $('#gen-style').value,
+        scene: $('#gen-scene').value
+      },
+      llmOverride: state.llm || undefined
+    });
+    body.innerHTML = renderMarkdown(result.markdown);
+    meta.textContent = `${result.title}｜${result.mode === 'llm' ? `大模型：${result.model}` : '本地知识库引擎'}${result.llmError ? `（大模型调用失败已回落：${result.llmError}）` : ''}`;
+    setLastResult(result.markdown, result.title || TYPE_TITLES[type]);
+    renderRail(result);
+    toast('生成完成，内容已通过审核');
+  } catch (err) {
+    body.innerHTML = `<div class="empty"><p style="color:#b5342b">生成失败：${escapeHtml(err.message)}</p></div>`;
+    meta.textContent = '生成失败';
+  } finally {
+    $('#gen-submit').disabled = false;
+  }
+});
+
+$('#result-copy').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(state.lastResult);
+    toast('已复制到剪贴板');
+  } catch {
+    toast('浏览器拒绝了剪贴板访问，请手动选择复制');
+  }
+});
+
+$('#result-download').addEventListener('click', () => {
+  const blob = new Blob([state.lastResult], { type: 'text/markdown;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${state.lastTitle || 'huayun-content'}.md`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+/* ------------------------------------------------------------ 内容审核 */
+
+function renderAudit(data) {
+  const { report, sanitized, changes } = data;
+  const html = [
+    `<div class="verdict ${report.level}">结论：${escapeHtml(report.status)}</div>`,
+    report.findings.length
+      ? report.findings
+          .map(
+            (f) => `<div class="finding ${f.level}">
+              <h5>${f.level === 'block' ? '红线' : f.level === 'warn' ? '需改写' : '提示'}｜${escapeHtml(f.category)}</h5>
+              <p>命中表述：${escapeHtml(f.terms.join('、'))}</p>
+              <p>${escapeHtml(f.advice)}</p>
+              ${f.reference ? `<p class="kpi" style="font-size:11.5px;color:#7d756a">依据：${escapeHtml(f.reference)}</p>` : ''}
+              ${
+                f.suggestions?.length
+                  ? `<div class="replace">建议替换：${f.suggestions.map((s) => `${escapeHtml(s.from)} → ${escapeHtml(s.to)}`).join('；')}</div>`
+                  : ''
+              }
+            </div>`
+          )
+          .join('')
+      : '<div class="finding notice"><h5>未发现风险表述</h5><p>文本可以发布，仍建议人工复核事实与授权信息。</p></div>',
+    report.positives.length
+      ? `<div class="finding notice"><h5>正向表达检测</h5><p>命中：${escapeHtml(report.positives.join('、'))}</p></div>`
+      : '',
+    changes.length
+      ? `<h3 style="font-size:14px;margin:16px 0 8px">改写后的合规版本</h3><div class="finding notice"><p style="white-space:pre-wrap">${escapeHtml(sanitized)}</p></div>`
+      : ''
+  ].join('');
+  $('#audit-report').innerHTML = html;
+}
+
+$('#audit-run').addEventListener('click', async () => {
+  const text = $('#audit-input').value;
+  if (!text.trim()) {
+    toast('请先输入待审核文本');
+    return;
+  }
+  try {
+    const report = check(text);
+    const fixed = sanitize(text);
+    renderAudit({ report, sanitized: fixed.text, changes: fixed.changes });
+  } catch (err) {
+    toast(err.message);
+  }
+});
+
+$('#audit-sample').addEventListener('click', () => {
+  $('#audit-input').value =
+    '【全国第一的剪纸大师】来校园开课啦！这门老祖宗的手艺能辟邪转运，学完还能治疗失眠。转发本条推文，限量抢购，错过再无！';
+  toast('示例文本已填入，点击开始审核');
+});
+
+/* ------------------------------------------------------------ 知识库 */
+
+let libraryCache = [];
+
+async function loadLibraryOptions() {
+  try {
+    const items = catalog().map((e) => ({ ...e, kindLabel: KIND_LABEL[e.kind] || '' }));
+    libraryCache = items;
+    $('#kb-topics').innerHTML = items.map((i) => `<option value="${escapeHtml(i.name)}">${escapeHtml(i.kindLabel)}</option>`).join('');
+    $('#lib-count').textContent = `共 ${items.length} 条结构化条目，覆盖非物质文化遗产、中华老字号、革命文化与先进文化、传统节日。`;
+    renderLibrary(items);
+  } catch (err) {
+    $('#lib-count').textContent = `知识库加载失败：${err.message}`;
+  }
+}
+
+function renderLibrary(items) {
+  $('#lib-grid').innerHTML = items
+    .map(
+      (i) => `<article class="kb-card kind-${escapeHtml(i.kind || '')}" data-id="${escapeHtml(i.id)}">
+        <h4>${escapeHtml(i.name)}</h4>
+        <div class="kb-meta">
+          <span class="kb-pill red">${escapeHtml(i.kindLabel)}</span>
+          <span class="kb-pill">${escapeHtml(i.category)}</span>
+          ${i.era ? `<span class="kb-pill">${escapeHtml(i.era)}</span>` : ''}
+          <span class="kb-pill vid">▶ 视频</span>
+        </div>
+        <p>${escapeHtml(i.summary || '')}</p>
+      </article>`
+    )
+    .join('');
+  $$('#lib-grid .kb-card').forEach((card) => card.addEventListener('click', () => openDrawer(card.dataset.id)));
+}
+
+const KIND_ICON = { heritage: '艺', brand: '号', spirit: '红', festival: '节' };
+const KIND_TONE = { heritage: 'tone-heritage', brand: 'tone-brand', spirit: 'tone-spirit', festival: 'tone-festival' };
+
+function openDrawer(id) {
+  try {
+    const entry = findEntry(id);
+    if (!entry) throw new Error('条目不存在');
+    const e = { ...entry, kindLabel: KIND_LABEL[entry.kind] || '' };
+    const block = (b) => `<h3>${escapeHtml(b.label)}</h3><ul>${b.items.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
+    const v = e.video || {};
+    const tone = KIND_TONE[e.kind] || 'tone-heritage';
+    const icon = KIND_ICON[e.kind] || '文';
+    const works = Array.isArray(e.works) ? e.works : [];
+    $('#drawer-body').innerHTML = `
+      <div class="entry-hero ${tone}">
+        <div class="entry-hero-seal">${icon}</div>
+        <div>
+          <h2>${escapeHtml(e.name)}</h2>
+          <div class="kb-meta">
+            <span class="kb-pill red">${escapeHtml(e.kindLabel)}</span>
+            <span class="kb-pill">${escapeHtml(e.category)}</span>
+            ${e.level ? `<span class="kb-pill">${escapeHtml(e.level)}</span>` : ''}
+            ${e.region ? `<span class="kb-pill">${escapeHtml(e.region)}</span>` : ''}
+          </div>
+        </div>
+      </div>
+      <div class="entry-video">
+        <a class="video-card" href="${escapeHtml(v.bilibili || '#')}" target="_blank" rel="noopener">
+          <span class="video-play">▶</span>
+          <div><strong>${escapeHtml(v.title || `${e.name} · 视频介绍`)}</strong><span>哔哩哔哩 · 按播放量排序的高赞视频，点击观看</span></div>
+        </a>
+        <div class="video-links">
+          <a href="${escapeHtml(v.bilibili || '#')}" target="_blank" rel="noopener">哔哩哔哩高赞</a>
+          <a href="${escapeHtml(v.douyin || '#')}" target="_blank" rel="noopener">抖音搜索</a>
+          <a href="${escapeHtml(v.xiaohongshu || '#')}" target="_blank" rel="noopener">小红书搜索</a>
+        </div>
+      </div>
+      ${e.summary ? `<p>${escapeHtml(e.summary)}</p>` : ''}
+      ${e.blocks.map(block).join('')}
+      ${works.length ? `<h3>相关作品</h3><div class="works-list">${works.map((w) => `<a href="${escapeHtml(w.url || '#')}" target="_blank" rel="noopener">《${escapeHtml(w.name)}》<span>↗</span></a>`).join('')}</div>` : ''}
+      ${e.writing.length ? `<h3>传播要点</h3><ul>${e.writing.map((w) => `<li>${escapeHtml(w)}</li>`).join('')}</ul>` : ''}
+      ${e.taboos.length ? `<h3>表达注意</h3><ul>${e.taboos.map((t) => `<li>${escapeHtml(t)}</li>`).join('')}</ul>` : ''}
+      ${e.values.length ? `<h3>价值落点</h3><div class="value-chips">${e.values.map((v) => `<span class="vchip">${escapeHtml(v)}</span>`).join('')}</div>` : ''}
+      <div class="row-actions"><button class="btn btn-primary" id="drawer-use">用这条素材生成内容</button></div>`;
+    $('#lib-drawer').hidden = false;
+    $('#drawer-use').addEventListener('click', () => {
+      $('#lib-drawer').hidden = true;
+      $('#gen-topic').value = e.name;
+      $$('.nav-item[data-view]').find((b) => b.dataset.view === 'studio').click();
+      toast('已填入主题，选择任务类型后即可生成');
+    });
+  } catch (err) {
+    toast(err.message);
+  }
+}
+
+$('#drawer-close').addEventListener('click', () => {
+  $('#lib-drawer').hidden = true;
+});
+$('#lib-drawer').addEventListener('click', (e) => {
+  if (e.target.id === 'lib-drawer') $('#lib-drawer').hidden = true;
+});
+
+let libTimer = null;
+$('#lib-search').addEventListener('input', (e) => {
+  clearTimeout(libTimer);
+  const q = e.target.value.trim();
+  const kind = $('#lib-kind').value;
+  libTimer = setTimeout(() => {
+    if (!q) {
+      renderLibrary(libraryCache.filter((i) => !kind || i.kind === kind));
+      return;
+    }
+    try {
+      const results = search(q, { limit: 30, kind: kind || undefined });
+      if (!results.length) {
+        $('#lib-grid').innerHTML = '<div class="empty"><p>没有匹配的条目，换个关键词试试。</p></div>';
+        return;
+      }
+      renderLibrary(results.map((r) => ({ ...r, kindLabel: KIND_LABEL[r.kind] || '', summary: r.snippet })));
+    } catch (err) {
+      toast(err.message);
+    }
+  }, 220);
+});
+
+$('#lib-kind').addEventListener('change', () => {
+  $('#lib-search').dispatchEvent(new Event('input'));
+});
+
+/* ------------------------------------------------------------ 看板 */
+
+function loadStats() {
+  try {
+    const s = db.stats;
+    const values = db.core.values;
+    const scenes = db.core.scenes;
+    const education = db.core.education;
+    $('#metrics').innerHTML = [
+      ['非物质文化遗产', s.heritage],
+      ['中华老字号', s.brands],
+      ['革命文化与先进文化', s.spirits],
+      ['传统节日', s.festivals],
+      ['社会主义核心价值观映射', s.values],
+      ['应用场景', s.scenes],
+      ['结构化条目总数', s.entries],
+      ['内容审核规则', s.moderationRules]
+    ]
+      .map(([label, value]) => `<div class="metric"><strong>${value}</strong><span>${label}</span></div>`)
+      .join('');
+
+    const dist = [
+      ['非物质文化遗产', s.heritage, 'var(--vermilion)', '传统美术 · 传统技艺 · 传统戏剧 · 民俗等'],
+      ['中华老字号', s.brands, 'var(--gold)', '餐饮 · 中医药 · 服饰鞋帽 · 日用五金等'],
+      ['革命文化与先进文化', s.spirits, '#7f1d1d', '革命精神与新时代精神谱系'],
+      ['传统节日', s.festivals, 'var(--cyan)', '节日节气与纪念日']
+    ];
+    const distMax = Math.max(...dist.map((d) => d[1]));
+    $('#kb-dist').innerHTML = dist
+      .map(
+        ([label, count, color, note]) => `<div class="kb-dist-row">
+          <span class="bar-label">${escapeHtml(label)}<em>${escapeHtml(note)}</em></span>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.round((count / distMax) * 100)}%;background:${color}"></div></div>
+          <strong>${count}</strong>
+        </div>`
+      )
+      .join('');
+
+    const LINK_META = [
+      ['heritage', '非物质文化遗产', '遗'],
+      ['brand', '中华老字号', '号'],
+      ['spirit', '革命文化与先进文化', '红'],
+      ['festival', '传统节日', '节']
+    ];
+    $('#value-grid').innerHTML = values
+      .map((v) => {
+        const lv = v.level === '社会层面' ? 'lv-social' : v.level === '公民层面' ? 'lv-civic' : '';
+        const links = v.links || {};
+        const rows = LINK_META
+          .map(([key, label, mark]) => {
+            const names = Array.isArray(links[key]) ? links[key] : [];
+            return names.length
+              ? `<li><span class="link-kind ${key}">${mark}</span><b>${escapeHtml(label)}</b><span>${names.map((n) => `<button class="kb-jump" data-name="${escapeHtml(n)}">${escapeHtml(n)}</button>`).join('、')}</span></li>`
+              : '';
+          })
+          .join('');
+        return `<div class="value-card ${lv}"><strong>${escapeHtml(v.name)}</strong><em>${escapeHtml(v.level)}</em><p>${escapeHtml(v.meaning)}</p>${rows ? `<div class="value-links"><ul>${rows}</ul></div>` : ''}</div>`;
+      })
+      .join('');
+
+    $('#value-grid').addEventListener('click', (e) => {
+      const btn = e.target.closest('.kb-jump');
+      if (!btn) return;
+      const item = libraryCache.find((i) => i.name === btn.dataset.name);
+      if (!item) return;
+      const libBtn = $$('.nav-item[data-view]').find((b) => b.dataset.view === 'library');
+      if (libBtn) libBtn.click();
+      openDrawer(item.id);
+    });
+
+    const sceneIcons = ['媒', '遗', '号', '志', '团', '宣'];
+    $('#scene-table').innerHTML = scenes
+      .map(
+        (sc, index) => `<div class="scene-card">
+          <div class="sc-head"><span class="scene-icon">${sceneIcons[index] || '文'}</span><h5>${escapeHtml(sc.name)}</h5></div>
+          <p><strong>痛点：</strong>${escapeHtml(sc.pain)}</p>
+          <p><strong>方案：</strong>${escapeHtml(sc.solution)}</p>
+          <div class="sc-deliv">${sc.deliverables.map((d) => `<span>${escapeHtml(d)}</span>`).join('')}</div>
+          <p class="kpi">衡量指标：${escapeHtml(sc.kpi)}</p>
+        </div>`
+      )
+      .join('');
+
+    const eduIcons = ['信', '领', '匠', '创', '媒'];
+    $('#edu-list').innerHTML = education
+      .map(
+        (e, index) => `<div class="edu-card"><span class="scene-icon">${eduIcons[index] || '育'}</span><div><strong>${escapeHtml(e.title)}</strong><p>${escapeHtml(e.detail)}</p></div></div>`
+      )
+      .join('');
+
+    const sceneSelect = $('#gen-scene');
+    sceneSelect.innerHTML = scenes.map((sc) => `<option value="${escapeHtml(sc.name)}">${escapeHtml(sc.name)}</option>`).join('');
+
+    $('#about-body').innerHTML = aboutHtml({ stats: s, scenes, education });
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
+function aboutHtml(data) {
+  const s = data.stats;
+  const features = [
+    ['问', '文化知识智能问答', '覆盖非遗、老字号、革命文化与先进文化、传统节日四类知识，答案带引用来源条目。'],
+    ['文', '非遗介绍文案生成', '按公众号、小红书、短视频、微博、校园海报分别成稿，自动附带话题标签与传播建议。'],
+    ['号', '老字号品牌故事编撰', '按源起、技艺与品质、文化价值、当代传承、时代寄语五段结构生成。'],
+    ['报', '海报文案一键产出', '主标题、副标题、核心标语、正文三行、行动号召与视觉建议一次给全。'],
+    ['审', '正向内容审核', `${s.moderationRules} 条规则分三级拦截，命中风险直接给出可替换表述。`],
+    ['赛', '活动方案与竞赛题库', '输出流程表、物料清单、分工与含答案解析的题库，直接支撑团日活动。']
+  ];
+  const problems = [
+    ['01', '内容产出慢', '一份合格的讲解词或推文，需要反复核对年代、人物、工序与名录，一篇稿件动辄数小时。'],
+    ['02', '表达形式单一', '同一条素材难以同时转化为推文、短视频、海报与讲稿，宣传常停留在展板与讲座。'],
+    ['03', '青年接受度低', '专业术语与日常经验之间存在距离，缺少从生活场景切入的表达。']
+  ];
+  const innovations = [
+    ['01', 'AIGC 与非遗深度融合', '知识库不是关键词词表，而是含技艺、内涵、传承、传播与禁忌的结构化档案。'],
+    ['02', '一次生成多形态内容', '同一主题可同时产出图文、短视频脚本、海报文案、讲稿与题库。'],
+    ['03', '价值落点内置于素材', '每条知识关联核心价值观具体项，引领融入表达而非贴标签。'],
+    ['04', '生成即审核', '输出前自动三级审核，命中风险直接给替换方案。'],
+    ['05', '双模式可离线', '无密钥完整运行，接入兼容接口即获得更自由表达，异常自动回落。']
+  ];
+  const sceneIcons = ['媒', '遗', '号', '志', '团', '宣'];
+  const eduIcons = ['信', '领', '匠', '创', '媒'];
+  return `
+    <div class="about-hero">
+      <div class="about-seal">韵</div>
+      <div>
+        <h3>华韵数智 · 中华优秀传统文化 AIGC 智能体</h3>
+        <div class="sub">面向非物质文化遗产与中华“老字号”品牌宣传推广</div>
+        <div class="tags"><span>智能体 AIGC 应用</span><span>校园网络文化节</span><span>数智赛道</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>作品概览</h3>
+      <dl class="ov-grid">
+        <div class="ov-tile"><dt>作品名称</dt><dd>华韵数智 · 中华优秀传统文化 AIGC 智能体</dd></div>
+        <div class="ov-tile"><dt>作品类型</dt><dd>智能体 AIGC 应用</dd></div>
+        <div class="ov-tile"><dt>参赛赛道</dt><dd>校园网络文化节 · 数智赛道</dd></div>
+        <div class="ov-tile"><dt>知识规模</dt><dd>${s.entries} 条结构化条目，${s.moderationRules} 条审核规则</dd></div>
+        <div class="ov-tile"><dt>技术形态</dt><dd>纯前端应用：浏览器端本地检索、生成与审核，可接入兼容大模型接口</dd></div>
+      </dl>
+    </div>
+    <div class="panel">
+      <h3>要解决的问题</h3>
+      <div class="problem-grid">
+        ${problems.map(([num, name, body]) => `<div class="problem-card"><span class="num">${num}</span><strong>${escapeHtml(name)}</strong><p>${escapeHtml(body)}</p></div>`).join('')}
+      </div>
+    </div>
+    <div class="panel">
+      <h3>核心功能</h3>
+      <div class="feature-grid">
+        ${features.map(([icon, name, body]) => `<div class="feature-card"><span class="fc-icon">${icon}</span><div><strong>${escapeHtml(name)}</strong><p>${escapeHtml(body)}</p></div></div>`).join('')}
+      </div>
+    </div>
+    <div class="panel">
+      <h3>创新点</h3>
+      <div class="innov-grid">
+        ${innovations.map(([num, name, body]) => `<div class="innov-card"><span class="num">${num}</span><strong>${escapeHtml(name)}</strong><p>${escapeHtml(body)}</p></div>`).join('')}
+      </div>
+    </div>
+    <div class="panel">
+      <h3>应用场景</h3>
+      <div class="scene-cards">
+        ${data.scenes
+          .map(
+            (sc, index) => `<div class="scene-card">
+              <div class="sc-head"><span class="scene-icon">${sceneIcons[index] || '文'}</span><h5>${escapeHtml(sc.name)}</h5></div>
+              <p>${escapeHtml(sc.solution)}</p>
+              <div class="sc-deliv">${sc.deliverables.map((d) => `<span>${escapeHtml(d)}</span>`).join('')}</div>
+            </div>`
+          )
+          .join('')}
+      </div>
+    </div>
+    <div class="panel">
+      <h3>育人价值</h3>
+      <div class="edu-cards">
+        ${data.education
+          .map(
+            (e, index) => `<div class="edu-card"><span class="scene-icon">${eduIcons[index] || '育'}</span><div><strong>${escapeHtml(e.title)}</strong><p>${escapeHtml(e.detail)}</p></div></div>`
+          )
+          .join('')}
+      </div>
+    </div>`;
+}
+
+/* ------------------------------------------------------------ 设置 */
+
+function syncSettings() {
+  if (state.llm) {
+    $('#cfg-base').value = state.llm.baseUrl || '';
+    $('#cfg-key').value = state.llm.apiKey || '';
+    $('#cfg-model').value = state.llm.model || '';
+    $('#engine-badge').textContent = `大模型模式 · ${state.llm.model || '自定义模型'}`;
+    $('#engine-badge').classList.add('is-live');
+  } else {
+    $('#engine-badge').textContent = '本地知识库引擎';
+    $('#engine-badge').classList.remove('is-live');
+  }
+}
+
+$('#cfg-save').addEventListener('click', () => {
+  const baseUrl = $('#cfg-base').value.trim();
+  const apiKey = $('#cfg-key').value.trim();
+  const model = $('#cfg-model').value.trim();
+  if (!baseUrl || !apiKey) {
+    toast('请填写接口地址与 API Key；留空则继续使用本地引擎');
+    return;
+  }
+  state.llm = { baseUrl, apiKey, model: model || 'gpt-4o-mini' };
+  localStorage.setItem('huayun.llm', JSON.stringify(state.llm));
+  syncSettings();
+  toast('已启用大模型生成，重新生成即可生效');
+});
+
+$('#cfg-clear').addEventListener('click', () => {
+  state.llm = null;
+  localStorage.removeItem('huayun.llm');
+  $('#cfg-base').value = '';
+  $('#cfg-key').value = '';
+  $('#cfg-model').value = '';
+  syncSettings();
+  toast('已清除配置，恢复本地知识库引擎');
+});
+
+$('#prompt-pre').textContent = SYSTEM_PROMPT;
+
+/* ------------------------------------------------------------ 启动 */
+
+syncSettings();
+
+(async () => {
+  const session = verify();
+  if (session) {
+    showApp({ displayName: session.displayName, role: session.role });
+  }
+})();
+</script>
+</body>
+</html>
